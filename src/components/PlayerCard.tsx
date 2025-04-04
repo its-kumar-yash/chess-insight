@@ -5,7 +5,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 interface PlayerCardProps {
   playerName: string;
-  playerRating: number;
+  playerRating: string;
   playerImage?: string;
   cardPosition: string;
 }

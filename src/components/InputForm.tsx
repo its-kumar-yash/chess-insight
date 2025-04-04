@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
-import { parsePGN } from "@/lib/chessUtils";
+import { getMoveHistory, getToPosition, parsePGN } from "@/lib/chessUtils";
 import { Textarea } from "./ui/textarea";
 import { Chess } from "chess.js";
 import { useChessInsightStore } from "@/store/chessInsight";
@@ -25,6 +25,8 @@ export default function InputForm() {
     setInputUsername,
     gameListByUsername,
     setGameListByUsername,
+    headerPGN,
+    setHeaderPGN,
   } = useChessInsightStore();
 
   const [selectOption, setSelectOption] = useState("PGN");
@@ -56,6 +58,7 @@ export default function InputForm() {
       if (inputPGN.length === 0) return;
       const chessGame = parsePGN(inputPGN);
       setChessGamePGN(chessGame);
+      setHeaderPGN(chessGame?.header() || {});
       if (!chessGame) {
         console.log("Invalid PGN format.");
       }
@@ -63,7 +66,8 @@ export default function InputForm() {
     }
   };
 
-  console.log(chessGamePGN?.history());
+  console.log("headerPGN", headerPGN);
+
 
   return (
     <div className="flex flex-col gap-2">

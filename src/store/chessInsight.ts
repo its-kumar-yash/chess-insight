@@ -5,7 +5,7 @@ interface ChessInsightState {
   inputPGN: string;
   chessGamePGN: Chess | null; //chess game object when user enter pgn
   inputUsername: string;
-  gameListByUsername: string[]; //list of games by username
+  gameListByUsername: any[]; //list of games by username
   headerPGN: { [key: string]: string }; //header of pgn
 }
 
@@ -35,7 +35,7 @@ export const useChessInsightStore = create<
       set((state) => ({ chessGamePGN })),
     setInputUsername: (inputUsername: string) =>
       set((state) => ({ inputUsername })),
-    setGameListByUsername: (gameListByUsername: string[]) =>
+    setGameListByUsername: (gameListByUsername: any[]) =>
       set((state) => ({ gameListByUsername })),
     setHeaderPGN: (headerPGN: { [key: string]: string }) =>
       set((state) => ({ headerPGN })),

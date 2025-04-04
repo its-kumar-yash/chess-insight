@@ -1,5 +1,6 @@
 import { Chess } from "chess.js";
 import pgnParser from "pgn-parser";
+import { fetchChessComGames, fetchLichessGames } from "./apiCalls";
 
 // parse PGN and return game information
 export function parsePGN(pgn: string) {
@@ -69,4 +70,25 @@ export function getToPosition(chess: Chess, moveNumber: number) {
     newChess.move(moves[i]);
   }
   return newChess.fen();
+}
+
+//fetch user games from Lichess or chess
+export async function fetchUserGames(username: string, platform: string) {
+  if (!username || !platform) {
+    console.error("Invalid username or platform.");
+    return [];
+  }
+  
+  if(platform === 'Chess.com'){
+    // Fetch games from Chess.com API
+    return fetchChessComGames(username);
+  }
+  else if(platform === 'Lichess'){
+    // Fetch games from Lichess API
+    return fetchLichessGames(username);
+  }
+  else{
+    console.log("Invalid platform. Please choose either 'Chess.com' or 'Lichess'.");
+    return [];
+  }
 }

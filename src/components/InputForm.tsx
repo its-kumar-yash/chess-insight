@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
-import { parsePGN } from "@/lib/chessUtils";
+import { fetchUserGames, parsePGN } from "@/lib/chessUtils";
 import { Textarea } from "./ui/textarea";
 import { useChessInsightStore } from "@/store/chessInsight";
 
@@ -31,6 +31,7 @@ export default function InputForm() {
   const [selectOption, setSelectOption] = useState("PGN");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
+  
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputUsername(e.target.value);
@@ -41,14 +42,20 @@ export default function InputForm() {
     setInputUsername("");
     setInputPGN("");
     // setShowGames(false);
-    setSelectedGame(null);
     setIsOpen(false);
   };
 
-  const handleUsernameSubmit = () => {
+  const handleUsernameSubmit = async () => {
     if (!inputUsername.trim()) return;
-
+    
+    if(selectOption === "PGN") return;
+    
     console.log(`Fetching games for ${inputUsername} from ${selectOption}`);
+    
+    const fetchedGames = await fetchUserGames(inputUsername, selectOption);
+    
+    setGameListByUsername(fetchedGames);
+    console.log("Fetched games:", fetchedGames);
     // setShowGames(true);
   };
 
@@ -57,6 +64,7 @@ export default function InputForm() {
       if (inputPGN.length === 0) return;
       const chessGame = parsePGN(inputPGN);
       setChessGamePGN(chessGame);
+
       setHeaderPGN(chessGame?.header() || {});
       if (!chessGame) {
         console.log("Invalid PGN format.");
@@ -121,8 +129,7 @@ export default function InputForm() {
         type="submit"
         onClick={handleStartAnalysis}
         disabled={
-          (selectOption !== "PGN" && !selectedGame) ||
-          (selectOption === "PGN" && !inputPGN.trim())
+          selectOption === "PGN" ? inputPGN.length === 0 : inputUsername.length === 0
         }
         className="w-full"
       >

@@ -12,16 +12,23 @@ import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
 import { parsePGN } from "@/lib/chessUtils";
 import { Textarea } from "./ui/textarea";
-import { set } from "react-hook-form";
 import { Chess } from "chess.js";
+import { useChessInsightStore } from "@/store/chessInsight";
 
 export default function InputForm() {
-  const [inputPGN, setInputPGN] = useState("");
-  const [chessGame, setChessGame] = useState<Chess | null>(null);
-  const [inputUsername, setInputUsername] = useState("");
+  const {
+    inputPGN,
+    setInputPGN,
+    chessGamePGN,
+    setChessGamePGN,
+    inputUsername,
+    setInputUsername,
+    gameListByUsername,
+    setGameListByUsername,
+  } = useChessInsightStore();
+
   const [selectOption, setSelectOption] = useState("PGN");
   const [isOpen, setIsOpen] = useState(false);
-  const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,18 +55,15 @@ export default function InputForm() {
     if (selectOption === "PGN") {
       if (inputPGN.length === 0) return;
       const chessGame = parsePGN(inputPGN);
-      setChessGame(chessGame);
+      setChessGamePGN(chessGame);
       if (!chessGame) {
         console.log("Invalid PGN format.");
       }
-      
     } else {
-      
     }
   };
 
-
-  console.log(chessGame?.history());
+  console.log(chessGamePGN?.history());
 
   return (
     <div className="flex flex-col gap-2">

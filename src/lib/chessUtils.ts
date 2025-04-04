@@ -14,7 +14,7 @@ export function parsePGN(pgn: string) {
         console.error("Invalid PGN format.");
         return null;
       }
-      console.log("Parsed PGN:", parsedArray);
+      // console.log("Parsed PGN:", parsedArray);
       parsedPGN = parsedArray[0] as any;
 
       // Convert header array to object

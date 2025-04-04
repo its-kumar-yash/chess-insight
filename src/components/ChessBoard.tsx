@@ -1,13 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import PlayerCard from "./PlayerCard";
 import { useChessInsightStore } from "@/store/chessInsight";
-
+import { getMoveHistory } from "@/lib/chessUtils";
+import { Chess } from "chess.js";
 
 export default function ChessBoard() {
-  const { headerPGN } = useChessInsightStore();
+  const { headerPGN, chessGamePGN } = useChessInsightStore();
+  const moveHistory = getMoveHistory(chessGamePGN as Chess);
   
   return (
     <div className="w-[500px]">
@@ -18,7 +20,7 @@ export default function ChessBoard() {
         cardPosition="top"
       />
       <Chessboard
-        position="start"
+        position={"start"}
         arePiecesDraggable={false}
         boardWidth={500}
         customDarkSquareStyle={{ backgroundColor: "#769656" }}
@@ -30,6 +32,8 @@ export default function ChessBoard() {
         playerImage={""}
         cardPosition="bottom"
       />
+
+      
     </div>
   );
 }

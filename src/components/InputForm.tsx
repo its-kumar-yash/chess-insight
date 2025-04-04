@@ -10,9 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
-import { getMoveHistory, getToPosition, parsePGN } from "@/lib/chessUtils";
+import { parsePGN } from "@/lib/chessUtils";
 import { Textarea } from "./ui/textarea";
-import { Chess } from "chess.js";
 import { useChessInsightStore } from "@/store/chessInsight";
 
 export default function InputForm() {
@@ -66,7 +65,7 @@ export default function InputForm() {
     }
   };
 
-  console.log("headerPGN", headerPGN);
+  // console.log("headerPGN", headerPGN);
 
 
   return (

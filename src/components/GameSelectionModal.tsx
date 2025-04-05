@@ -33,55 +33,38 @@ export default function GameSelectionModal({
                   {game.white.username} ({game.white.rating}) vs{" "}
                   {game.black.username} ({game.black.rating})
                 </h3>
-                <span className="text-xs text-muted-foreground capitalize">
-                  {game.platform}
+                <span className="text-sm text-muted-foreground">
+                  {game.platform === "lichess" ? "Lichess" : "Chess.com"}
                 </span>
               </div>
+              <div className="flex justify-between items-center">
+                <div>
+                  <span className="text-sm text-muted-foreground capitalize">
+                    {game.timeClass}
+                  </span>
+                  {game.url && (
+                    <p>
+                      <a
+                        href={game.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline text-sm"
+                      >
+                        View on{" "}
+                        {game.platform === "lichess" ? "Lichess" : "Chess.com"}
+                      </a>
+                    </p>
+                  )}
+                </div>
 
-              <p>
-                <strong>Time Class:</strong> {game.timeClass}
-              </p>
-
-              {game.timeControl && (
-                <p>
-                  <strong>Time Control:</strong> {game.timeControl}
-                </p>
-              )}
-
-              {game.endTime && (
-                <p>
-                  <strong>Date:</strong>{" "}
-                  {new Date(game.endTime * 1000).toLocaleDateString()}
-                </p>
-              )}
-
-              {game.result && (
-                <p>
-                  <strong>Result:</strong> {game.result}
-                </p>
-              )}
-
-              <p>
-                <strong>Winner:</strong> {game.winner}
-              </p>
-
-              {game.url && (
-                <p>
-                  <a
-                    href={game.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline text-sm"
-                  >
-                    View on{" "}
-                    {game.platform === "lichess" ? "Lichess" : "Chess.com"}
-                  </a>
-                </p>
-              )}
-
-              <Button size="sm" className="mt-2" onClick={() => onSelect(game)}>
-                Analyze This Game
-              </Button>
+                <Button
+                  size="sm"
+                  className="mt-2"
+                  onClick={() => onSelect(game)}
+                >
+                  Analyze This Game
+                </Button>
+              </div>
             </div>
           ))}
         </div>

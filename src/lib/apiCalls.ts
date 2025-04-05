@@ -12,6 +12,14 @@ function padMonth(month: number) {
   return month.toString().padStart(2, "0");
 }
 
+function getChessComWinner(game: any){
+  const whiteResult = game.white.result;
+  const blackResult = game.black.result;
+  if(whiteResult === "win") return "white";
+  if(blackResult === "win") return "black";
+  else return "draw";
+}
+
 function getWinner(game: any) {
   const result = game.result || game.status;
   if (result === "white") return "black";
@@ -36,6 +44,11 @@ function getWinner(game: any) {
 
   return "abandoned";
 }
+
+function getLichessWinner(game: any) {
+  return game.winner;
+}
+
 
 export async function fetchChessComGames(username: string) {
   try {
@@ -68,7 +81,7 @@ export async function fetchChessComGames(username: string) {
       fen: game.fen,
       endTime: game.end_time,
       result: `${game.white.result}-${game.black.result}`,
-      winner: getWinner(game),
+      winner: getChessComWinner(game),
     }));
   } catch (error) {
     console.error("Error fetching Chess.com games:", error);
@@ -132,7 +145,7 @@ export async function fetchLichessGames(username: string) {
       fen: undefined, // Lichess doesn't return FEN in this API
       endTime: game.lastMoveAt,
       result: game.status,
-      winner: getWinner(game),
+      winner: getLichessWinner(game),
     }));
   } catch (error) {
     console.log("Error fetching Lichess games:", error);

@@ -1,5 +1,5 @@
 import { platform } from "os";
-import { ChessGameResponse, ResultType } from "./types";
+import { ChessGameResponse, ResultType, StockfishAnalysisResponse } from "./types";
 
 const monthLengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -12,44 +12,19 @@ function padMonth(month: number) {
   return month.toString().padStart(2, "0");
 }
 
-function getChessComWinner(game: any){
+function getChessComWinner(game: any) {
   const whiteResult = game.white.result;
   const blackResult = game.black.result;
-  if(whiteResult === "win") return "white";
-  if(blackResult === "win") return "black";
+  if (whiteResult === "win") return "white";
+  if (blackResult === "win") return "black";
   else return "draw";
-}
-
-function getWinner(game: any) {
-  const result = game.result || game.status;
-  if (result === "white") return "black";
-  if (result === "black") return "white";
-
-  const drawResults = [
-    "draw",
-    "agreed",
-    "stalemate",
-    "repetition",
-    "timeout",
-    "insufficient",
-  ];
-
-  if (
-    drawResults.includes(game.white?.result) ||
-    drawResults.includes(game.black?.result) ||
-    drawResults.includes(result)
-  ) {
-    return "draw";
-  }
-
-  return "abandoned";
 }
 
 function getLichessWinner(game: any) {
   return game.winner;
 }
 
-
+// Fetching games from Chess.com
 export async function fetchChessComGames(username: string) {
   try {
     const res = await fetch(
@@ -89,6 +64,7 @@ export async function fetchChessComGames(username: string) {
   }
 }
 
+//fetching lichess games
 export async function fetchLichessGames(username: string) {
   let monthStart = new Date(
     `${gamesPeriod.year}-${padMonth(gamesPeriod.month)}-01T00:00:00Z`
@@ -138,7 +114,9 @@ export async function fetchLichessGames(username: string) {
         aiLevel: game.players.black.aiLevel,
       },
       timeClass: game.speed,
-      timeControl: game.clock ? `${game.clock.initial}+${game.clock.increment}` : undefined,
+      timeControl: game.clock
+        ? `${game.clock.initial}+${game.clock.increment}`
+        : undefined,
       pgn: game.pgn,
       url: `https://lichess.org/${game.id}`,
       eco: game.opening?.eco,
@@ -153,3 +131,30 @@ export async function fetchLichessGames(username: string) {
   }
 }
 
+//stockfish analysis
+export async function analyzeMoveWithStockfish(
+  fen: string,
+  depth: number = 12
+) {
+  try {
+    const res = await fetch("https://chess-api.com/v1", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fen,
+        depth,
+        maxThinkingTime: 100,
+        variants: 1,
+      }),
+    });
+
+    const data: StockfishAnalysisResponse = await res.json();
+
+    return data;
+  } catch (error) {
+    console.error("Error analyzing move with Stockfish:", error);
+    return null;
+  }
+}

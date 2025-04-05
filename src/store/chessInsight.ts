@@ -1,4 +1,4 @@
-import { ChessGameResponse } from "@/lib/types";
+import { ChessGameResponse, StockfishAnalysisResponse } from "@/lib/types";
 import { Chess } from "chess.js";
 import { create } from "zustand";
 
@@ -9,6 +9,8 @@ interface ChessInsightState {
   gameListByUsername: any[]; //list of games by username
   headerPGN: { [key: string]: string }; //header of pgn
   fen: string; //fen string of the current position
+  currentAnalysis: StockfishAnalysisResponse | null; // stockfish analysis of current move
+  currentDepth: number; // current depth of analysis
 }
 
 interface ChessInsightActions {
@@ -18,6 +20,10 @@ interface ChessInsightActions {
   setGameListByUsername: (gameListByUsername: ChessGameResponse[]) => void;
   setHeaderPGN: (headerPGN: { [key: string]: string }) => void;
   setFen: (fen: string) => void;
+  setCurrentAnalysis: (
+    currentAnalysis: StockfishAnalysisResponse | null
+  ) => void;
+  setCurrentDepth: (currentDepth: number) => void;
 }
 
 const initialState: ChessInsightState = {
@@ -27,6 +33,8 @@ const initialState: ChessInsightState = {
   gameListByUsername: [],
   headerPGN: {},
   fen: "start",
+  currentAnalysis: null,
+  currentDepth: 12,
 };
 
 export const useChessInsightStore = create<
@@ -44,5 +52,9 @@ export const useChessInsightStore = create<
     setHeaderPGN: (headerPGN: { [key: string]: string }) =>
       set((state) => ({ headerPGN })),
     setFen: (fen: string) => set((state) => ({ fen })),
+    setCurrentAnalysis: (currentAnalysis: StockfishAnalysisResponse | null) =>
+      set((state) => ({ currentAnalysis })),
+    setCurrentDepth: (currentDepth: number) =>
+      set((state) => ({ currentDepth })),
   };
 });

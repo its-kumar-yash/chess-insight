@@ -13,6 +13,9 @@ import { ChevronDown } from "lucide-react";
 import { fetchUserGames, parsePGN } from "@/lib/chessUtils";
 import { Textarea } from "./ui/textarea";
 import { useChessInsightStore } from "@/store/chessInsight";
+import { ChessGameResponse } from "@/lib/types";
+import GameSelectionModal from "./GameSelectionModal";
+
 
 export default function InputForm() {
   const {
@@ -31,7 +34,7 @@ export default function InputForm() {
   const [selectOption, setSelectOption] = useState("PGN");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
-  
+  const [showGameModal, setShowGameModal] = useState(false);
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputUsername(e.target.value);
@@ -47,25 +50,32 @@ export default function InputForm() {
 
   const handleUsernameSubmit = async () => {
     if (!inputUsername.trim()) return;
-    
-    if(selectOption === "PGN") return;
-    
+
+    if (selectOption === "PGN") return;
+
     console.log(`Fetching games for ${inputUsername} from ${selectOption}`);
-    
+
     const fetchedGames = await fetchUserGames(inputUsername, selectOption);
-    
+
+    //for dev only
+    // const fetchedGames = mockGames;
+
     setGameListByUsername(fetchedGames);
     console.log("Fetched games:", fetchedGames);
+    setShowGameModal(true);
     // setShowGames(true);
   };
 
   const handleStartAnalysis = () => {
     if (selectOption === "PGN") {
       if (inputPGN.length === 0) return;
+
       const chessGame = parsePGN(inputPGN);
+
       setChessGamePGN(chessGame);
 
       setHeaderPGN(chessGame?.header() || {});
+
       if (!chessGame) {
         console.log("Invalid PGN format.");
       }
@@ -73,8 +83,12 @@ export default function InputForm() {
     }
   };
 
-  // console.log("headerPGN", headerPGN);
-
+  const handleGameSelect = (game: ChessGameResponse) => {
+    const chessGame = parsePGN(game.pgn);
+    setChessGamePGN(chessGame);
+    setHeaderPGN(chessGame?.header() || {});
+    setShowGameModal(false);
+  };
 
   return (
     <div className="flex flex-col gap-2">
@@ -129,12 +143,20 @@ export default function InputForm() {
         type="submit"
         onClick={handleStartAnalysis}
         disabled={
-          selectOption === "PGN" ? inputPGN.length === 0 : inputUsername.length === 0
+          selectOption === "PGN"
+            ? inputPGN.length === 0
+            : inputUsername.length === 0
         }
         className="w-full"
       >
         Start Analysis
       </Button>
+      {showGameModal && <GameSelectionModal
+        isOpen={showGameModal}
+        games={gameListByUsername}
+        onSelect={handleGameSelect}
+        onClose={() => setShowGameModal(false)}
+      />}
     </div>
   );
 }

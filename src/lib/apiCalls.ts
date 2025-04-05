@@ -1,3 +1,6 @@
+import { platform } from "os";
+import { ChessGameResponse, ResultType } from "./types";
+
 const monthLengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 const gamesPeriod = {
@@ -7,6 +10,31 @@ const gamesPeriod = {
 
 function padMonth(month: number) {
   return month.toString().padStart(2, "0");
+}
+
+function getWinner(game: any) {
+  const result = game.result || game.status;
+  if (result === "white") return "black";
+  if (result === "black") return "white";
+
+  const drawResults = [
+    "draw",
+    "agreed",
+    "stalemate",
+    "repetition",
+    "timeout",
+    "insufficient",
+  ];
+
+  if (
+    drawResults.includes(game.white?.result) ||
+    drawResults.includes(game.black?.result) ||
+    drawResults.includes(result)
+  ) {
+    return "draw";
+  }
+
+  return "abandoned";
 }
 
 export async function fetchChessComGames(username: string) {
@@ -19,7 +47,11 @@ export async function fetchChessComGames(username: string) {
 
     const data = await res.json();
 
+    console.log("Chess.com games data:", data);
+
     return data.games.map((game: any) => ({
+      platform: "chesscom",
+      uuid: game.uuid || crypto.randomUUID(),
       white: {
         username: game.white.username,
         rating: game.white.rating.toString(),
@@ -29,10 +61,15 @@ export async function fetchChessComGames(username: string) {
         rating: game.black.rating.toString(),
       },
       timeClass: game.time_class,
+      timeControl: game.time_control,
       pgn: game.pgn,
+      url: game.url,
+      eco: game.eco,
+      fen: game.fen,
+      endTime: game.end_time,
+      result: `${game.white.result}-${game.black.result}`,
+      winner: getWinner(game),
     }));
-
-
   } catch (error) {
     console.error("Error fetching Chess.com games:", error);
     return [];
@@ -72,7 +109,11 @@ export async function fetchLichessGames(username: string) {
       .filter((line) => line.trim())
       .map((line) => JSON.parse(line));
 
+    console.log("Lichess games data:", games);
+
     return games.map((game: any) => ({
+      platform: "lichess",
+      uuid: game.id || crypto.randomUUID(),
       white: {
         username: game.players.white.user?.name || "AI",
         rating: game.players.white.rating,
@@ -84,11 +125,18 @@ export async function fetchLichessGames(username: string) {
         aiLevel: game.players.black.aiLevel,
       },
       timeClass: game.speed,
+      timeControl: game.clock ? `${game.clock.initial}+${game.clock.increment}` : undefined,
       pgn: game.pgn,
+      url: `https://lichess.org/${game.id}`,
+      eco: game.opening?.eco,
+      fen: undefined, // Lichess doesn't return FEN in this API
+      endTime: game.lastMoveAt,
+      result: game.status,
+      winner: getWinner(game),
     }));
-
   } catch (error) {
     console.log("Error fetching Lichess games:", error);
     return [];
   }
 }
+

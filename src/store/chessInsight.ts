@@ -1,3 +1,4 @@
+import { ChessGameResponse } from "@/lib/types";
 import { Chess } from "chess.js";
 import { create } from "zustand";
 
@@ -13,7 +14,7 @@ interface ChessInsightActions {
   setInputPGN: (inputPGN: string) => void;
   setChessGamePGN: (chessGamePGN: Chess | null) => void;
   setInputUsername: (inputUsername: string) => void;
-  setGameListByUsername: (gameListByUsername: string[]) => void;
+  setGameListByUsername: (gameListByUsername: ChessGameResponse[]) => void;
   setHeaderPGN: (headerPGN: { [key: string]: string }) => void;
 }
 

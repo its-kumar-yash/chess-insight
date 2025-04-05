@@ -8,9 +8,8 @@ import { getMoveHistory } from "@/lib/chessUtils";
 import { Chess } from "chess.js";
 
 export default function ChessBoard() {
-  const { headerPGN, chessGamePGN } = useChessInsightStore();
-  const moveHistory = getMoveHistory(chessGamePGN as Chess);
-  
+  const { headerPGN, chessGamePGN, fen } = useChessInsightStore();
+
   return (
     <div className="w-[500px]">
       <PlayerCard
@@ -20,7 +19,7 @@ export default function ChessBoard() {
         cardPosition="top"
       />
       <Chessboard
-        position={"start"}
+        position={fen}
         arePiecesDraggable={false}
         boardWidth={500}
         customDarkSquareStyle={{ backgroundColor: "#769656" }}
@@ -32,8 +31,6 @@ export default function ChessBoard() {
         playerImage={""}
         cardPosition="bottom"
       />
-
-      
     </div>
   );
 }

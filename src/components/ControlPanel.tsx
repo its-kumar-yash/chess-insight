@@ -3,6 +3,7 @@ import { Card } from './ui/card'
 import InputForm from './InputForm'
 import { Separator } from "@/components/ui/separator"
 import NavigationPanel from './NavigationPanel'
+import MoveAnalysis from './MoveAnalysis'
 
 
 export default function ControlPanel() {
@@ -12,7 +13,7 @@ export default function ControlPanel() {
         <InputForm />
         <Separator />
         {/* ANALYSIS BODY */}
-        <div className='h-full'></div>
+        <MoveAnalysis />
         <Separator />
         {/* NAVIGATION BUTTON */}
         <NavigationPanel />

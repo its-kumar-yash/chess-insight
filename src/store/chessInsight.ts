@@ -8,6 +8,7 @@ interface ChessInsightState {
   inputUsername: string;
   gameListByUsername: any[]; //list of games by username
   headerPGN: { [key: string]: string }; //header of pgn
+  fen: string; //fen string of the current position
 }
 
 interface ChessInsightActions {
@@ -16,6 +17,7 @@ interface ChessInsightActions {
   setInputUsername: (inputUsername: string) => void;
   setGameListByUsername: (gameListByUsername: ChessGameResponse[]) => void;
   setHeaderPGN: (headerPGN: { [key: string]: string }) => void;
+  setFen: (fen: string) => void;
 }
 
 const initialState: ChessInsightState = {
@@ -24,6 +26,7 @@ const initialState: ChessInsightState = {
   inputUsername: "",
   gameListByUsername: [],
   headerPGN: {},
+  fen: "start",
 };
 
 export const useChessInsightStore = create<
@@ -40,5 +43,6 @@ export const useChessInsightStore = create<
       set((state) => ({ gameListByUsername })),
     setHeaderPGN: (headerPGN: { [key: string]: string }) =>
       set((state) => ({ headerPGN })),
+    setFen: (fen: string) => set((state) => ({ fen })),
   };
 });

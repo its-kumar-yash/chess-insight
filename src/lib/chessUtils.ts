@@ -61,7 +61,7 @@ export function getMoveHistory(chess: Chess) {
 
 export function getToPosition(chess: Chess, moveNumber: number) {
   const moves = getMoveHistory(chess);
-  if (moveNumber < 0 || moveNumber >= moves?.length) {
+  if (moveNumber < 0 || moveNumber > moves?.length) {
     console.error("Invalid move number:", moveNumber);
     return null;
   }

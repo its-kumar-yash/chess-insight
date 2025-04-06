@@ -7,6 +7,7 @@ import {
   ChevronLast,
   ChevronLeft,
   ChevronRight,
+  Repeat,
   Save,
 } from "lucide-react";
 import { useChessInsightStore } from "@/store/chessInsight";
@@ -15,8 +16,15 @@ import { Chess } from "chess.js";
 import { Slider } from "./ui/slider";
 
 export default function NavigationPanel() {
-  const { chessGamePGN, setFen, fen, currentDepth, setCurrentDepth } =
-    useChessInsightStore();
+  const {
+    chessGamePGN,
+    setFen,
+    fen,
+    currentDepth,
+    setCurrentDepth,
+    boardFlipped,
+    setBoardFlipped,
+  } = useChessInsightStore();
 
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [position, setPosition] = useState("start");
@@ -58,6 +66,10 @@ export default function NavigationPanel() {
     },
   };
 
+  const toggleBoardFlip = () => {
+    setBoardFlipped(!boardFlipped);
+  };
+
   return (
     <div className="space-y-4">
       <div className="px-2">
@@ -72,19 +84,22 @@ export default function NavigationPanel() {
         />
       </div>
       <div className="w-full flex justify-evenly gap-2">
-        <Button variant="outline" className="w-16" onClick={handleNav.first}>
+        <Button variant="outline" className="w-12" onClick={toggleBoardFlip}>
+          <Repeat className="h-5 w-5" />
+        </Button>
+        <Button variant="outline" className="w-12" onClick={handleNav.first}>
           <ChevronFirst className="h-5 w-5" />
         </Button>
-        <Button variant="outline" className="w-16" onClick={handleNav.prev}>
+        <Button variant="outline" className="w-12" onClick={handleNav.prev}>
           <ChevronLeft className="h-5 w-5" />
         </Button>
-        <Button variant="outline" className="w-16" onClick={handleNav.next}>
+        <Button variant="outline" className="w-12" onClick={handleNav.next}>
           <ChevronRight className="h-5 w-5" />
         </Button>
-        <Button variant="outline" className="w-16" onClick={handleNav.last}>
+        <Button variant="outline" className="w-12" onClick={handleNav.last}>
           <ChevronLast className="h-5 w-5" />
         </Button>
-        <Button variant="outline" className="w-16" onClick={handleNav.save}>
+        <Button variant="outline" className="w-12" onClick={handleNav.save}>
           <Save className="h-5 w-5" />
         </Button>
       </div>

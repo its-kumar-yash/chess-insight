@@ -8,7 +8,7 @@ import { getMoveHistory } from "@/lib/chessUtils";
 import { Chess } from "chess.js";
 
 export default function ChessBoard() {
-  const { headerPGN, chessGamePGN, fen } = useChessInsightStore();
+  const { headerPGN, chessGamePGN, fen, boardFlipped } = useChessInsightStore();
 
   return (
     <div className="w-[500px]">
@@ -24,6 +24,7 @@ export default function ChessBoard() {
         boardWidth={500}
         customDarkSquareStyle={{ backgroundColor: "#769656" }}
         customLightSquareStyle={{ backgroundColor: "#eeeed2" }}
+        boardOrientation={boardFlipped ? "black" : "white"}
       />
       <PlayerCard
         playerName={headerPGN?.White || "Anonymous"}

@@ -158,3 +158,28 @@ export async function analyzeMoveWithStockfish(
     return null;
   }
 }
+
+export async function analyzeMoveWithStockfishV2(
+  fen: string,
+  depth: number = 12
+) {
+  try {
+    const res = await fetch("https://stockfish.online/api/s/v2.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fen,
+        depth,
+      }),
+    });
+
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    console.error("Error analyzing move with Stockfish:", error);
+    return null;
+  }
+}

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useChessInsightStore } from "@/store/chessInsight";
-import { analyzeMoveWithStockfish } from "@/lib/apiCalls";
+import { analyzeMoveWithStockfish, analyzeMoveWithStockfishV2 } from "@/lib/apiCalls";
 
 export default function MoveAnalysis() {
   const { fen, currentAnalysis, setCurrentAnalysis, currentDepth, setCurrentDepth } = useChessInsightStore();
@@ -15,6 +15,7 @@ export default function MoveAnalysis() {
       setLoading(true);
 
       const result = await analyzeMoveWithStockfish(fen, currentDepth);
+      // const result = await analyzeMoveWithStockfishV2(fen, currentDepth);
 
       setCurrentAnalysis(result);
       setLoading(false);
@@ -29,16 +30,17 @@ export default function MoveAnalysis() {
       {!loading && !currentAnalysis && <p>No analysis available for the current move.</p>}
       {!loading && currentAnalysis && (
         <div className="shadow p-3 rounded mb-3 border border-gray-200">
-          <p><strong>FEN:</strong> {currentAnalysis.fen}</p>
+          {/* <p><strong>FEN:</strong> {currentAnalysis.fen}</p> */}
           <p><strong>Evaluation:</strong> {currentAnalysis.eval}</p>
           <p><strong>Best Move:</strong> {currentAnalysis.move}</p>
           {/* <p><strong>Win Chance:</strong> {currentAnalysis.winChance.toFixed(2)}%</p> */}
-          <p><strong>Description:</strong> {currentAnalysis.text}</p>
-          {currentAnalysis.continuationArr?.length > 0 && (
+          <p><strong>Mate:</strong> {currentAnalysis.mate}</p>
+          {/* <p><strong>Description:</strong> {currentAnalysis.text}</p> */}
+          {/* {currentAnalysis.continuationArr?.length > 0 && (
             <p>
               <strong>Continuations:</strong> {currentAnalysis.continuationArr.join(', ')}
             </p>
-          )}
+          )} */}
         </div>
       )}
     </div>

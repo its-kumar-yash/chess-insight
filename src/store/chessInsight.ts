@@ -12,6 +12,7 @@ interface ChessInsightState {
   currentAnalysis: StockfishAnalysisResponse | null; // stockfish analysis of current move
   currentDepth: number; // current depth of analysis
   boardFlipped: boolean; // whether the board is flipped or not
+  currentMoveIndex: number; // current move index in the game
 }
 
 interface ChessInsightActions {
@@ -26,6 +27,7 @@ interface ChessInsightActions {
   ) => void;
   setCurrentDepth: (currentDepth: number) => void;
   setBoardFlipped: (boardFlipped: boolean) => void;
+  setCurrentMoveIndex: (currentMoveIndex: number) => void;
 }
 
 const initialState: ChessInsightState = {
@@ -38,6 +40,7 @@ const initialState: ChessInsightState = {
   currentAnalysis: null,
   currentDepth: 12,
   boardFlipped: false,
+  currentMoveIndex: 0,
 };
 
 export const useChessInsightStore = create<
@@ -61,5 +64,7 @@ export const useChessInsightStore = create<
       set((state) => ({ currentDepth })),
     setBoardFlipped: (boardFlipped: boolean) =>
       set((state) => ({ boardFlipped })),
+    setCurrentMoveIndex: (currentMoveIndex: number) =>
+      set((state) => ({ currentMoveIndex })),
   };
 });

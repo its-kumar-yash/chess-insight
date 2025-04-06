@@ -24,9 +24,10 @@ export default function NavigationPanel() {
     setCurrentDepth,
     boardFlipped,
     setBoardFlipped,
+    currentMoveIndex,
+    setCurrentMoveIndex,
   } = useChessInsightStore();
 
-  const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [position, setPosition] = useState("start");
 
   const moveHistory = getMoveHistory(chessGamePGN as Chess);
@@ -53,7 +54,7 @@ export default function NavigationPanel() {
     first: () => goToMove(0),
     prev: () => goToMove(Math.max(0, currentMoveIndex - 1)),
     next: () => goToMove(Math.min(moveHistory.length, currentMoveIndex + 1)),
-    last: () => goToMove(moveHistory.length),
+    last: () => goToMove(moveHistory.length - 1),
     save: () => {
       if (!chessGamePGN) return;
       const blob = new Blob([chessGamePGN.pgn()], { type: "text/plain" });
@@ -93,7 +94,7 @@ export default function NavigationPanel() {
         <Button variant="outline" className="w-12" onClick={handleNav.prev}>
           <ChevronLeft className="h-5 w-5" />
         </Button>
-        <Button variant="outline" className="w-12" onClick={handleNav.next}>
+        <Button variant="outline" className="w-12" onClick={handleNav.next} disabled={currentMoveIndex === moveHistory.length - 1}>
           <ChevronRight className="h-5 w-5" />
         </Button>
         <Button variant="outline" className="w-12" onClick={handleNav.last}>

@@ -29,35 +29,45 @@ export interface ChessGameResponse {
 // Values are similar to what evaluation bar shows on most of chess websites.
 
 export interface StockfishAnalysisResponse {
+  success?: boolean;
   text: string;
   eval: number;
-  move: string; // best move
-  fen: string; // position after the move
-  depth: number; // depth of the analysis
-  winChance: number; // win chance for the player to move
+  move?: string; // best move
+  bestMove?: string; // best move in UCI format
+  fen?: string; // position after the move
+  depth?: number; // depth of the analysis
+  winChance?: number; // win chance for the player to move
   continuationArr: string[]; // array of best moves
   mate: number | null; // mate in X moves
-  centipawns: string; // centipawn value of the best move
+  centipawns?: string; // centipawn value of the best move
 
-  san: string; // standard algebraic notation of the best move
-  lan: string; // long algebraic notation of the best move
-  turn: string; // turn of the player to move
-  color: string; // color of the player to move
-  piece: string; // piece to move
-  flags: string; // flags of the move
-  isCapture: boolean; // is the move a capture
-  isCastling: boolean; // is the move a castling
-  isPromotion: boolean; // is the move a promotion
+  san?: string; // standard algebraic notation of the best move
+  lan?: string; // long algebraic notation of the best move
+  turn?: string; // turn of the player to move
+  color?: string; // color of the player to move
+  piece?: string; // piece to move
+  flags?: string; // flags of the move
+  isCapture?: boolean; // is the move a capture
+  isCastling?: boolean; // is the move a castling
+  isPromotion?: boolean; // is the move a promotion
 
-  from: string; // from square of the move
-  to: string; // to square of the move
-  fromNumeric: string; // from square in numeric format
-  toNumeric: string; // to square in numeric format
+  from?: string; // from square of the move
+  to?: string; // to square of the move
+  fromNumeric?: string; // from square in numeric format
+  toNumeric?: string; // to square in numeric format
 
-  taskId: string; // task id of the analysis
-  time: number; // time taken for the analysis
-  type: string; // type of the analysis (move, check, checkmate, stalemate, etc.)
+  taskId?: string; // task id of the analysis
+  time?: number; // time taken for the analysis
+  type?: string; // type of the analysis (move, check, checkmate, stalemate, etc.)
 }
+
+
+// {"success":true,
+//   "evaluation":1.36,
+//   "mate":null,
+//   "bestmove":"bestmove b7b6 ponder f3e5",
+//   "continuation":"b7b6 f3e5 h7h6 g5f6 f8f6 d2f3"}
+          
 
 // Chess.com response example
 // {

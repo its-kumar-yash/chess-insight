@@ -9,6 +9,7 @@ import {
 import { Chess } from "chess.js";
 import { getMoveHistory, getToPosition } from "@/lib/chessUtils";
 import { StockfishAnalysisResponse } from "@/lib/types";
+import { Progress } from "./ui/progress";
 
 export default function MoveAnalysis() {
   const {
@@ -93,7 +94,9 @@ export default function MoveAnalysis() {
       {loading ? (
         <div className="space-y-2">
           <p>Analyzing moves... {progress}% completed</p>
-          <progress className="w-full" value={progress} max="100" />
+          {/* <progress className="w-full" value={progress} max="100" /> */}
+          <Progress className="w-full" value={progress} max={100} />
+
         </div>
       ) : (
         <>

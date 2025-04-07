@@ -5,8 +5,12 @@ import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 export default function EvaluationBar() {
-  const { currentAnalysis, boardFlipped, chessGamePGN, currentMoveIndex } =
-    useChessInsightStore();
+  const {
+    currentAnalysis,
+    boardFlipped,
+    chessGamePGN,
+    currentMoveIndex,
+  } = useChessInsightStore();
 
   // Calculate evaluation display values directly from currentAnalysis
   const calculateEvalDisplay = () => {
@@ -98,7 +102,7 @@ export default function EvaluationBar() {
           animate={{
             height: `${barHeight}%`,
             bottom: 0,
-            top:"auto",
+            top: "auto",
           }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         />

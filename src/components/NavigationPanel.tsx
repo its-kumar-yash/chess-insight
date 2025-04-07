@@ -26,6 +26,7 @@ export default function NavigationPanel() {
     setBoardFlipped,
     currentMoveIndex,
     setCurrentMoveIndex,
+    analysisArray
   } = useChessInsightStore();
 
   const [position, setPosition] = useState("start");
@@ -53,7 +54,9 @@ export default function NavigationPanel() {
   const handleNav = {
     first: () => goToMove(0),
     prev: () => goToMove(Math.max(0, currentMoveIndex - 1)),
-    next: () => goToMove(Math.min(moveHistory.length, currentMoveIndex + 1)),
+    next: () => {goToMove(Math.min(moveHistory.length, currentMoveIndex + 1))
+      console.log(analysisArray[currentMoveIndex])
+    },
     last: () => goToMove(moveHistory.length - 1),
     save: () => {
       if (!chessGamePGN) return;

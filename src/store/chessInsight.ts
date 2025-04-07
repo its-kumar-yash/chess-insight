@@ -10,6 +10,7 @@ interface ChessInsightState {
   headerPGN: { [key: string]: string }; //header of pgn
   fen: string; //fen string of the current position
   currentAnalysis: StockfishAnalysisResponse | null; // stockfish analysis of current move
+  analysisArray: StockfishAnalysisResponse[]; // array of stockfish analysis for all moves
   currentDepth: number; // current depth of analysis
   boardFlipped: boolean; // whether the board is flipped or not
   currentMoveIndex: number; // current move index in the game
@@ -25,6 +26,7 @@ interface ChessInsightActions {
   setCurrentAnalysis: (
     currentAnalysis: StockfishAnalysisResponse | null
   ) => void;
+  setAnalysisArray: (analysisArray: StockfishAnalysisResponse[]) => void;
   setCurrentDepth: (currentDepth: number) => void;
   setBoardFlipped: (boardFlipped: boolean) => void;
   setCurrentMoveIndex: (currentMoveIndex: number) => void;
@@ -38,6 +40,7 @@ const initialState: ChessInsightState = {
   headerPGN: {},
   fen: "start",
   currentAnalysis: null,
+  analysisArray: [],
   currentDepth: 12,
   boardFlipped: false,
   currentMoveIndex: 0,
@@ -60,6 +63,8 @@ export const useChessInsightStore = create<
     setFen: (fen: string) => set((state) => ({ fen })),
     setCurrentAnalysis: (currentAnalysis: StockfishAnalysisResponse | null) =>
       set((state) => ({ currentAnalysis })),
+    setAnalysisArray: (analysisArray: StockfishAnalysisResponse[]) =>
+      set((state) => ({ analysisArray })),
     setCurrentDepth: (currentDepth: number) =>
       set((state) => ({ currentDepth })),
     setBoardFlipped: (boardFlipped: boolean) =>

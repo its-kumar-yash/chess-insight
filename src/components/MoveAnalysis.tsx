@@ -2,46 +2,118 @@
 
 import React, { useEffect, useState } from "react";
 import { useChessInsightStore } from "@/store/chessInsight";
-import { analyzeMoveWithStockfish, analyzeMoveWithStockfishV2 } from "@/lib/apiCalls";
+import {
+  analyzeMoveWithStockfish,
+  analyzeMoveWithStockfishV2,
+} from "@/lib/apiCalls";
+import { Chess } from "chess.js";
+import { getMoveHistory, getToPosition } from "@/lib/chessUtils";
+import { StockfishAnalysisResponse } from "@/lib/types";
 
 export default function MoveAnalysis() {
-  const { fen, currentAnalysis, setCurrentAnalysis, currentDepth, setCurrentDepth } = useChessInsightStore();
+  const {
+    chessGamePGN,
+    fen,
+    currentAnalysis,
+    setCurrentAnalysis,
+    analysisArray,
+    setAnalysisArray,
+    currentDepth,
+    setCurrentDepth,
+    currentMoveIndex,
+  } = useChessInsightStore();
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
+  // Call for each move
+  // useEffect(() => {
+  //   const analyze = async () => {
+  //     if (!fen) return;
+
+  //     setLoading(true);
+
+  //     const result = await analyzeMoveWithStockfish(fen, currentDepth);
+  //     // const result = await analyzeMoveWithStockfishV2(fen, currentDepth);
+
+  //     setCurrentAnalysis(result);
+  //     setLoading(false);
+  //   };
+  //   analyze();
+  // }, [fen]);
+
+  // call for all moves in the game
   useEffect(() => {
-    const analyze = async () => {
-      if (!fen) return;
-
+    const computeAllAnalysis = async () => {
+      if (!chessGamePGN) return;
       setLoading(true);
+      setProgress(0);
+      const moveHistory = getMoveHistory(chessGamePGN as Chess);
+      const totalMoves = moveHistory.length;
+      const analysisResults = [];
 
-      const result = await analyzeMoveWithStockfish(fen, currentDepth);
-      // const result = await analyzeMoveWithStockfishV2(fen, currentDepth);
+      for (let i = 0; i < totalMoves; i++) {
+        const currentFen = getToPosition(chessGamePGN as Chess, i);
+        if (!currentFen) continue;
 
-      setCurrentAnalysis(result);
+        try {
+          const result = await analyzeMoveWithStockfish(
+            currentFen,
+            currentDepth
+          );
+          analysisResults.push(result);
+        } catch (error) {
+          analysisResults.push(null);
+          console.error(`Error analyzing move ${i}:`, error);
+        }
+
+        setProgress(Math.round(((i + 1) / totalMoves) * 100));
+      }
+      setAnalysisArray(
+        analysisResults.filter(
+          (result): result is StockfishAnalysisResponse => result !== null
+        )
+      );
+
+      setCurrentAnalysis(analysisResults[currentMoveIndex]);
       setLoading(false);
     };
-    analyze();
-  }, [fen]);
+
+    computeAllAnalysis();
+  }, [chessGamePGN, currentDepth]);
+
+  useEffect(() => {
+    if (analysisArray.length > 0) {
+      setCurrentAnalysis(analysisArray[currentMoveIndex]);
+    }
+  }, [currentMoveIndex, analysisArray]);
 
   return (
     <div className="h-full">
       <h2 className="text-xl font-semibold mb-4">Move Analysis</h2>
-      {loading && <p>Analyzing move, please wait...</p>}
-      {!loading && !currentAnalysis && <p>No analysis available for the current move.</p>}
-      {!loading && currentAnalysis && (
-        <div className="shadow p-3 rounded mb-3 border border-gray-200">
-          {/* <p><strong>FEN:</strong> {currentAnalysis.fen}</p> */}
-          <p><strong>Evaluation:</strong> {currentAnalysis.eval}</p>
-          <p><strong>Best Move:</strong> {currentAnalysis.move}</p>
-          {/* <p><strong>Win Chance:</strong> {currentAnalysis.winChance.toFixed(2)}%</p> */}
-          <p><strong>Mate:</strong> {currentAnalysis.mate}</p>
-          {/* <p><strong>Description:</strong> {currentAnalysis.text}</p> */}
-          {/* {currentAnalysis.continuationArr?.length > 0 && (
-            <p>
-              <strong>Continuations:</strong> {currentAnalysis.continuationArr.join(', ')}
-            </p>
-          )} */}
+      {loading ? (
+        <div className="space-y-2">
+          <p>Analyzing moves... {progress}% completed</p>
+          <progress className="w-full" value={progress} max="100" />
         </div>
+      ) : (
+        <>
+          {!currentAnalysis && (
+            <p>No analysis available for the current move.</p>
+          )}
+          {currentAnalysis && (
+            <div className="shadow p-3 rounded mb-3 border border-gray-200">
+              <p>
+                <strong>Evaluation:</strong> {currentAnalysis.eval}
+              </p>
+              <p>
+                <strong>Best Move:</strong> {currentAnalysis.move}
+              </p>
+              <p>
+                <strong>Mate:</strong> {currentAnalysis.mate}
+              </p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

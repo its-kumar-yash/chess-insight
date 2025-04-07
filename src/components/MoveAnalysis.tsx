@@ -26,22 +26,6 @@ export default function MoveAnalysis() {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  // Call for each move
-  // useEffect(() => {
-  //   const analyze = async () => {
-  //     if (!fen) return;
-
-  //     setLoading(true);
-
-  //     const result = await analyzeMoveWithStockfish(fen, currentDepth);
-  //     // const result = await analyzeMoveWithStockfishV2(fen, currentDepth);
-
-  //     setCurrentAnalysis(result);
-  //     setLoading(false);
-  //   };
-  //   analyze();
-  // }, [fen]);
-
   // call for all moves in the game
   useEffect(() => {
     const computeAllAnalysis = async () => {
@@ -49,12 +33,18 @@ export default function MoveAnalysis() {
       setLoading(true);
       setProgress(0);
       const moveHistory = getMoveHistory(chessGamePGN as Chess);
-      const totalMoves = moveHistory.length;
-      const analysisResults = [];
+      const totalMoves = moveHistory.length + 1;
+      const analysisResults: (StockfishAnalysisResponse | null)[] = [];
 
-      for (let i = 0; i < totalMoves; i++) {
+      analysisResults.push(null);
+      
+      for (let i = 1; i < totalMoves; i++) {
         const currentFen = getToPosition(chessGamePGN as Chess, i);
-        if (!currentFen) continue;
+        if (!currentFen) {
+          continue;
+          analysisResults.push(null);
+          continue
+        }
 
         try {
           const result = await analyzeMoveWithStockfish(
@@ -67,13 +57,10 @@ export default function MoveAnalysis() {
           console.error(`Error analyzing move ${i}:`, error);
         }
 
-        setProgress(Math.round(((i + 1) / totalMoves) * 100));
+        setProgress(Math.round((i / (totalMoves - 1)) * 100));
       }
-      setAnalysisArray(
-        analysisResults.filter(
-          (result): result is StockfishAnalysisResponse => result !== null
-        )
-      );
+
+      setAnalysisArray(analysisResults.filter((result): result is StockfishAnalysisResponse => result !== null));
 
       setCurrentAnalysis(analysisResults[currentMoveIndex]);
       setLoading(false);

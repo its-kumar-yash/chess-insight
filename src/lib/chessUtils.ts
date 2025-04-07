@@ -66,7 +66,7 @@ export function getToPosition(chess: Chess, moveNumber: number) {
     return null;
   }
   const newChess = new Chess();
-  for (let i = 0; i <= Math.min(moveNumber, moves.length); i++) {
+  for (let i = 0; i < moveNumber; i++) {
     newChess.move(moves[i]);
   }
   return newChess.fen();

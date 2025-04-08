@@ -57,7 +57,7 @@ export default function NavigationPanel() {
     next: () => {goToMove(Math.min(moveHistory.length, currentMoveIndex + 1))
       console.log(analysisArray[currentMoveIndex])
     },
-    last: () => goToMove(moveHistory.length - 1),
+    last: () => goToMove(moveHistory.length),
     save: () => {
       if (!chessGamePGN) return;
       const blob = new Blob([chessGamePGN.pgn()], { type: "text/plain" });
@@ -97,7 +97,7 @@ export default function NavigationPanel() {
         <Button variant="outline" className="w-12" onClick={handleNav.prev}>
           <ChevronLeft className="h-5 w-5" />
         </Button>
-        <Button variant="outline" className="w-12" onClick={handleNav.next} disabled={currentMoveIndex === moveHistory.length - 1}>
+        <Button variant="outline" className="w-12" onClick={handleNav.next} disabled={currentMoveIndex === moveHistory.length}>
           <ChevronRight className="h-5 w-5" />
         </Button>
         <Button variant="outline" className="w-12" onClick={handleNav.last}>

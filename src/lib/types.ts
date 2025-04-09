@@ -23,9 +23,9 @@ export interface ChessGameResponse {
   winner: ResultType;
 }
 
-// Winning chance: value 50 (50%) means that position is equal. 
-// Over 50 - white is winning. Below 50 - black is winning. This is calculated using Lichess formula 
-// (Win% = 50 + 50 * (2 / (1 + exp(-0.00368208 * centipawns)) - 1)). 
+// Winning chance: value 50 (50%) means that position is equal.
+// Over 50 - white is winning. Below 50 - black is winning. This is calculated using Lichess formula
+// (Win% = 50 + 50 * (2 / (1 + exp(-0.00368208 * centipawns)) - 1)).
 // Values are similar to what evaluation bar shows on most of chess websites.
 
 export interface StockfishAnalysisResponse {
@@ -59,15 +59,14 @@ export interface StockfishAnalysisResponse {
   taskId?: string; // task id of the analysis
   time?: number; // time taken for the analysis
   type?: string; // type of the analysis (move, check, checkmate, stalemate, etc.)
+  classification?: Classification; // Added classification field
 }
-
 
 // {"success":true,
 //   "evaluation":1.36,
 //   "mate":null,
 //   "bestmove":"bestmove b7b6 ponder f3e5",
 //   "continuation":"b7b6 f3e5 h7h6 g5f6 f8f6 d2f3"}
-          
 
 // Chess.com response example
 // {
@@ -170,3 +169,104 @@ export interface StockfishAnalysisResponse {
 //   time: 10677,
 //   type: "move"
 // }
+
+//classification
+export enum Classification {
+  BRILLIANT = "brilliant",
+  GREAT = "great",
+  BEST = "best",
+  GOOD = "good",
+  EXCELLENT = "excellent",
+  INACCURACY = "inaccuracy",
+  MISTAKE = "mistake",
+  BLUNDER = "blunder",
+  BOOK = "book",
+  FORCED = "forced",
+}
+
+export const classificationValues = {
+  [Classification.BLUNDER]: 0,
+  [Classification.MISTAKE]: 0.2,
+  [Classification.INACCURACY]: 0.4,
+  [Classification.GOOD]: 0.65,
+  [Classification.EXCELLENT]: 0.9,
+  [Classification.BEST]: 1,
+  [Classification.GREAT]: 1,
+  [Classification.BRILLIANT]: 1,
+  [Classification.BOOK]: 1,
+  [Classification.FORCED]: 1,
+};
+
+// Classification types with no special rules
+export const centipawnClassifications = [
+  Classification.BEST,
+  Classification.EXCELLENT,
+  Classification.GOOD,
+  Classification.INACCURACY,
+  Classification.MISTAKE,
+  Classification.BLUNDER,
+];
+
+export interface EvaluatedPosition {
+  fen: string;
+  move?: {
+    uci: string;
+    san: string;
+  };
+  topLines: Array<{
+    id: number;
+    depth: number;
+    evaluation: {
+      type: string;
+      value: number;
+    };
+    moveUCI: string;
+    moveSAN?: string;
+  }>;
+  cutoffEvaluation?: {
+    type: string;
+    value: number;
+  };
+  worker?: string;
+  opening?: string;
+  classification?: Classification;
+}
+
+export interface MoveClassifications {
+  brilliant: number;
+  great: number;
+  best: number;
+  excellent: number;
+  good: number;
+  inaccuracy: number;
+  mistake: number;
+  blunder: number;
+  book: number;
+  forced: number;
+}
+
+export interface PlayerAccuracies {
+  white: number;
+  black: number;
+}
+
+export interface PlayerClassifications {
+  white: MoveClassifications;
+  black: MoveClassifications;
+}
+
+export interface MoveReport {
+  moveIndex: number;
+  fen: string;
+  classification: Classification;
+  eval: number; //centipawn value of the best move
+  mate: number | null;
+}
+
+export interface Report {
+  accuracies: PlayerAccuracies;
+  classifications: PlayerClassifications;
+  moves: MoveReport[];
+}
+
+

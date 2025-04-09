@@ -1,4 +1,8 @@
-import { ChessGameResponse, StockfishAnalysisResponse } from "@/lib/types";
+import {
+  ChessGameResponse,
+  Report,
+  StockfishAnalysisResponse,
+} from "@/lib/types";
 import { Chess } from "chess.js";
 import { create } from "zustand";
 
@@ -14,6 +18,7 @@ interface ChessInsightState {
   currentDepth: number; // current depth of analysis
   boardFlipped: boolean; // whether the board is flipped or not
   currentMoveIndex: number; // current move index in the game
+  report: Report | null;
 }
 
 interface ChessInsightActions {
@@ -30,6 +35,7 @@ interface ChessInsightActions {
   setCurrentDepth: (currentDepth: number) => void;
   setBoardFlipped: (boardFlipped: boolean) => void;
   setCurrentMoveIndex: (currentMoveIndex: number) => void;
+  setReport: (report: Report | null) => void;
 }
 
 const initialState: ChessInsightState = {
@@ -44,6 +50,7 @@ const initialState: ChessInsightState = {
   currentDepth: 12,
   boardFlipped: false,
   currentMoveIndex: 0,
+  report: null,
 };
 
 export const useChessInsightStore = create<
@@ -71,5 +78,6 @@ export const useChessInsightStore = create<
       set((state) => ({ boardFlipped })),
     setCurrentMoveIndex: (currentMoveIndex: number) =>
       set((state) => ({ currentMoveIndex })),
+    setReport: (report: Report | null) => set((state) => ({ report })),
   };
 });

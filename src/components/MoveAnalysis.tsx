@@ -18,7 +18,8 @@ import { generateMoveReport, generateReport } from "@/lib/analysis";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Separator } from "./ui/separator";
 import Image from "next/image";
-import { Button } from "./ui/button";
+import openings from "../resource/opening.json";
+
 
 const classificationColors = {
   brilliant: "#1cada6",
@@ -31,31 +32,6 @@ const classificationColors = {
   blunder: "#ca3531",
   book: "#a98966",
   forced: "#d0d0d0",
-};
-
-const ClassificationBadge = ({
-  classification,
-}: {
-  classification: keyof typeof classificationColors | null;
-}) => {
-  if (!classification) return null;
-
-  const classKey =
-    classification.toLowerCase() as keyof typeof classificationColors;
-
-  return (
-    <span
-      className="px-2 py-1 rounded text-xs font-medium"
-      style={{
-        backgroundColor: classificationColors[classKey],
-        color: ["brilliant", "great", "best", "blunder"].includes(classKey)
-          ? "white"
-          : "black",
-      }}
-    >
-      {classification}
-    </span>
-  );
 };
 
 const MoveClassificationRow = ({
@@ -201,6 +177,7 @@ export default function MoveAnalysis() {
 
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [openingInfo, setOpeningInfo] = useState<string>("Not Available");
 
   // call for all moves in the game
   useEffect(() => {
@@ -231,6 +208,18 @@ export default function MoveAnalysis() {
 
         setProgress(Math.round(((i + 1) / totalMoves) * 100));
       }
+
+      analysisArray.forEach((result, i) => {
+        if (result) {
+          // Find opening for this position
+          const opening = openings.find(opening => result.fen?.includes(opening.fen));
+          if (opening) {
+            console.log("Opening found:", opening);
+            result.opening = opening.name;
+            setOpeningInfo(opening.name);
+          }
+        }
+      });
 
       setAnalysisArray(
         analysisResults.filter(
@@ -289,7 +278,7 @@ export default function MoveAnalysis() {
                 <span className="text-lg font-light">Starting Position</span>
               </div>
               <div>
-                <span className="text-lg font-light">Opening Name</span>
+                <span className="text-lg font-light">{openingInfo}</span>
               </div>
             </CardContent>
           </Card>

@@ -1,4 +1,3 @@
-import { platform } from "os";
 import { ChessGameResponse, ResultType, StockfishAnalysisResponse } from "./types";
 
 const monthLengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];

@@ -7,6 +7,7 @@ import {
   Report,
   StockfishAnalysisResponse,
 } from "./types";
+import openings from "../resource/opening.json"
 
 export function classify(
   currentPosition: StockfishAnalysisResponse,
@@ -18,7 +19,13 @@ export function classify(
   }
 
   //handle forced moves
-  // if(currentPosition.)
+  if (currentPosition.bestMove && currentPosition.move === currentPosition.bestMove) {
+    return Classification.BRILLIANT;
+  }
+
+  if (currentPosition.continuationArr && currentPosition.continuationArr.length === 1) {
+    return Classification.FORCED;
+  }
 
   // handle mayes scores specially
   if (previousPosition.mate !== null || currentPosition !== null) {
@@ -66,7 +73,13 @@ export function classify(
 
   // calculate eval loss (positive means position got worse for the player who moves)
   let evalLoss = sign * (previousPosition.eval - currentPosition.eval);
-
+  if (evalLoss < -50) {
+    return Classification.BRILLIANT;
+  }
+  // 7. If the move almost doesn’t hurt – or even slightly improves – the position
+  if (evalLoss >= -50 && evalLoss <= 10) {
+    return Classification.GREAT;
+  }
   if (evalLoss <= 10) return Classification.BEST;
   if (evalLoss <= 30) return Classification.EXCELLENT;
   if (evalLoss <= 70) return Classification.GOOD;
@@ -121,6 +134,10 @@ export function generateMoveReport(analysisArray: StockfishAnalysisResponse[]) {
   for (let i = 0; i < analysisArray.length; i++) {
     const analysis = analysisArray[i];
     if (!analysis.classification) continue;
+
+    let opening = openings.find((opening) => analysisArray[i].fen?.includes(opening.fen));
+    analysisArray[i].opening = opening?.name;
+    console.log("opening", opening?.name, analysisArray[i].fen);
 
     //determine which  player made this move
     const moveColor = i % 2 == 1 ? "white" : "black";

@@ -60,6 +60,7 @@ export interface StockfishAnalysisResponse {
   time?: number; // time taken for the analysis
   type?: string; // type of the analysis (move, check, checkmate, stalemate, etc.)
   classification?: Classification; // Added classification field
+  opening?: string; // opening name
 }
 
 // {"success":true,

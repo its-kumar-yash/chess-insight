@@ -186,9 +186,9 @@ export enum Classification {
 
 export const classificationValues = {
   [Classification.BLUNDER]: 0,
-  [Classification.MISTAKE]: 0.2,
-  [Classification.INACCURACY]: 0.4,
-  [Classification.GOOD]: 0.65,
+  [Classification.MISTAKE]: 0.25,
+  [Classification.INACCURACY]: 0.5,
+  [Classification.GOOD]: 0.75,
   [Classification.EXCELLENT]: 0.9,
   [Classification.BEST]: 1,
   [Classification.GREAT]: 1,

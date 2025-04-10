@@ -17,12 +17,15 @@ export function classify(
     return Classification.BOOK;
   }
 
+  //handle forced moves
+  // if(currentPosition.)
+
   // handle mayes scores specially
   if (previousPosition.mate !== null || currentPosition !== null) {
     //basic classification for mate situation
     if (previousPosition.mate === null && currentPosition.mate !== null) {
       return currentPosition.mate > 0
-        ? Classification.BEST
+        ? Classification.BRILLIANT
         : Classification.BLUNDER;
     } else if (
       previousPosition.mate !== null &&
@@ -41,8 +44,12 @@ export function classify(
         Math.sign(previousPosition.mate) === Math.sign(currentPosition.mate)
       ) {
         // same side has mate, check if its faster or slower
-        if (Math.abs(currentPosition.mate) <= Math.sign(currentPosition.mate)) {
+        if (Math.abs(currentPosition.mate) < Math.sign(currentPosition.mate)) {
           return Classification.BEST;
+        } else if (
+          Math.abs(currentPosition.mate) === Math.abs(previousPosition.mate)
+        ) {
+          return Classification.EXCELLENT; // Same mate length, still good
         } else {
           return Classification.GOOD;
         }
@@ -71,7 +78,7 @@ export function classify(
 // Function to generate a move report based on the analysis array
 export function generateMoveReport(analysisArray: StockfishAnalysisResponse[]) {
   //add classification to each move
-  for (let i = 1; i < analysisArray.length; i++) {
+  for (let i = 0; i < analysisArray.length; i++) {
     analysisArray[i].classification = classify(
       analysisArray[i],
       analysisArray[i - 1]
@@ -202,16 +209,21 @@ export function generateReport(analysisArray: StockfishAnalysisResponse[]) {
 
     const moveColour = curr.turn === "b" ? "white" : "black";
 
-    let classification: Classification = Classification.GOOD;
+    // Initialize with a default classification
+    let classification: Classification;
 
+    // First check if it's a best move match
     if (curr.bestMove && curr.move === curr.bestMove) {
       classification = Classification.BEST;
     } else {
+      // Only classify based on evaluation if it's not already classified as BEST
       const prevEval = parseInt(prev.centipawns || "0");
       const currEval = parseInt(curr.centipawns || "0");
       let evalLoss =
         moveColour === "white" ? prevEval - currEval : currEval - prevEval;
 
+      // Find the appropriate classification based on eval loss
+      classification = Classification.BLUNDER; // Default to worst case
       for (let classif of centipawnClassifications) {
         const threshold = getEvaluationLossThreshold(classif, prevEval);
         if (evalLoss <= threshold) {
@@ -221,6 +233,7 @@ export function generateReport(analysisArray: StockfishAnalysisResponse[]) {
       }
     }
 
+    // Update stats based on the single classification
     if (moveColour === "white") {
       whiteStats.current += classificationValues[classification];
       whiteStats.maximum++;

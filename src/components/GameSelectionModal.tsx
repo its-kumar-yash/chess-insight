@@ -23,7 +23,7 @@ export default function GameSelectionModal({
           <DialogTitle>Select a Game</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-4">
-          {games.map((game) => (
+          {games.slice().reverse().map((game) => (
             <div
               key={game.uuid}
               className="p-4 border rounded-lg hover:bg-muted transition-colors"

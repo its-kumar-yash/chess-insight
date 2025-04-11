@@ -100,12 +100,17 @@ export function getEvaluationLossThreshold(
   classif: Classification,
   prevEval: number
 ) {
-  
   const absPrev = Math.abs(prevEval);
   let threshold = 0;
   switch (classif) {
+    case Classification.BRILLIANT:
+      threshold = -0.0001 * absPrev * absPrev - 0.1 * absPrev - 20;
+      break;
+    case Classification.GREAT:
+      threshold = 0.0001 * absPrev * absPrev + 0.05 * absPrev - 10.5455;
+      break;
     case Classification.BEST:
-      threshold = 0.0001 * absPrev * absPrev + 0.0236 * absPrev - 3.7143;
+      threshold = 0.0001 * absPrev * absPrev + 0.0236 * absPrev + 0;
       break;
     case Classification.EXCELLENT:
       threshold = 0.0002 * absPrev * absPrev + 0.1231 * absPrev + 27.5455;

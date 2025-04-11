@@ -201,6 +201,7 @@ export const classificationValues = {
 // Classification types with no special rules
 export const centipawnClassifications = [
   Classification.BEST,
+  Classification.GREAT,  
   Classification.EXCELLENT,
   Classification.GOOD,
   Classification.INACCURACY,

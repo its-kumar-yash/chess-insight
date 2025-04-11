@@ -7,7 +7,7 @@ import {
   Report,
   StockfishAnalysisResponse,
 } from "./types";
-import openings from "../resource/opening.json"
+import openings from "../resource/opening.json";
 
 export function classify(
   currentPosition: StockfishAnalysisResponse,
@@ -18,13 +18,19 @@ export function classify(
     return Classification.BOOK;
   }
 
-  //handle forced moves
-  if (currentPosition.bestMove && currentPosition.move === currentPosition.bestMove) {
-    return Classification.BRILLIANT;
+  if (
+    currentPosition.continuationArr &&
+    currentPosition.continuationArr.length === 1
+  ) {
+    return Classification.FORCED;
   }
 
-  if (currentPosition.continuationArr && currentPosition.continuationArr.length === 1) {
-    return Classification.FORCED;
+  //handle forced moves
+  if (
+    currentPosition.bestMove &&
+    currentPosition.move === currentPosition.bestMove
+  ) {
+    return Classification.BRILLIANT;
   }
 
   // handle mayes scores specially
@@ -73,14 +79,22 @@ export function classify(
 
   // calculate eval loss (positive means position got worse for the player who moves)
   let evalLoss = sign * (previousPosition.eval - currentPosition.eval);
-  if (evalLoss < -50) {
+
+  const brilliantThreshold = getEvaluationLossThreshold(
+    Classification.BRILLIANT,
+    previousPosition.eval
+  );
+
+  if (evalLoss <= brilliantThreshold) {
     return Classification.BRILLIANT;
   }
+
   // 7. If the move almost doesn’t hurt – or even slightly improves – the position
-  if (evalLoss >= -50 && evalLoss <= 10) {
+  if (evalLoss >= -5 && evalLoss <= 5) {
     return Classification.GREAT;
   }
-  if (evalLoss <= 10) return Classification.BEST;
+  if ((evalLoss > 5 && evalLoss <= 10) || (evalLoss >= -10 && evalLoss < -5))
+    return Classification.BEST;
   if (evalLoss <= 30) return Classification.EXCELLENT;
   if (evalLoss <= 70) return Classification.GOOD;
   if (evalLoss <= 150) return Classification.INACCURACY;
@@ -135,7 +149,9 @@ export function generateMoveReport(analysisArray: StockfishAnalysisResponse[]) {
     const analysis = analysisArray[i];
     if (!analysis.classification) continue;
 
-    let opening = openings.find((opening) => analysisArray[i].fen?.includes(opening.fen));
+    let opening = openings.find((opening) =>
+      analysisArray[i].fen?.includes(opening.fen)
+    );
     analysisArray[i].opening = opening?.name;
     console.log("opening", opening?.name, analysisArray[i].fen);
 

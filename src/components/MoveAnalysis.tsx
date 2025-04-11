@@ -173,9 +173,10 @@ export default function MoveAnalysis() {
     currentMoveIndex,
     report,
     setReport,
+    loading,
+    setLoading,
   } = useChessInsightStore();
 
-  const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [openingInfo, setOpeningInfo] = useState<string>("Not Available");
 
@@ -275,10 +276,10 @@ export default function MoveAnalysis() {
             <Separator className="!mt-2" />
             <CardContent className="flex items-center justify-between pt-1 px-3">
               <div>
-                <span className="text-lg font-light">Starting Position</span>
+                <span className="text-md font-light">Starting Position</span>
               </div>
               <div>
-                <span className="text-lg font-light">{openingInfo}</span>
+                <span className="text-md font-light">{openingInfo}</span>
               </div>
             </CardContent>
           </Card>

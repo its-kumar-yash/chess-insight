@@ -8,7 +8,7 @@ import MoveAnalysis from './MoveAnalysis'
 
 export default function ControlPanel() {
   return (
-    <Card className='w-1/3 px-4 !gap-3'>
+    <Card className='w-[29.33%] px-4 !gap-3'>
         {/* INPUT HEADER */}
         <InputForm />
         <Separator />

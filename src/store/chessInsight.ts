@@ -19,6 +19,7 @@ interface ChessInsightState {
   boardFlipped: boolean; // whether the board is flipped or not
   currentMoveIndex: number; // current move index in the game
   report: Report | null;
+  loading: boolean; // loading state for the analysis
 }
 
 interface ChessInsightActions {
@@ -36,6 +37,7 @@ interface ChessInsightActions {
   setBoardFlipped: (boardFlipped: boolean) => void;
   setCurrentMoveIndex: (currentMoveIndex: number) => void;
   setReport: (report: Report | null) => void;
+  setLoading: (loading: boolean) => void;
 }
 
 const initialState: ChessInsightState = {
@@ -51,6 +53,7 @@ const initialState: ChessInsightState = {
   boardFlipped: false,
   currentMoveIndex: 0,
   report: null,
+  loading: false,
 };
 
 export const useChessInsightStore = create<
@@ -79,5 +82,6 @@ export const useChessInsightStore = create<
     setCurrentMoveIndex: (currentMoveIndex: number) =>
       set((state) => ({ currentMoveIndex })),
     setReport: (report: Report | null) => set((state) => ({ report })),
+    setLoading: (loading: boolean) => set((state) => ({ loading })),
   };
 });

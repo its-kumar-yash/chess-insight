@@ -201,7 +201,7 @@ export const classificationValues = {
 // Classification types with no special rules
 export const centipawnClassifications = [
   Classification.BEST,
-  Classification.GREAT,  
+  Classification.GREAT,
   Classification.EXCELLENT,
   Classification.GOOD,
   Classification.INACCURACY,
@@ -270,5 +270,4 @@ export interface Report {
   classifications: PlayerClassifications;
   moves: MoveReport[];
 }
-
 

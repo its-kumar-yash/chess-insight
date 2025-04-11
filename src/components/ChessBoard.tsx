@@ -5,6 +5,7 @@ import { Chessboard } from "react-chessboard";
 import PlayerCard from "./PlayerCard";
 import { useChessInsightStore } from "@/store/chessInsight";
 import EvaluationBar from "./EvaluationBar";
+import { Arrow } from "react-chessboard/dist/chessboard/types";
 
 const classificationColors = {
   brilliant: "#1cada6",
@@ -33,9 +34,10 @@ export default function ChessBoard() {
     fen,
     boardFlipped,
     currentMoveIndex,
+    currentAnalysis,
     report,
+    showArrows,
   } = useChessInsightStore();
-
   const topPlayer = boardFlipped ? headerPGN?.White : headerPGN?.Black;
   const bottomPlayer = boardFlipped ? headerPGN?.Black : headerPGN?.White;
   const topPlayerElo = boardFlipped ? headerPGN?.WhiteElo : headerPGN?.BlackElo;
@@ -64,6 +66,12 @@ export default function ChessBoard() {
     },
   };
 
+  const customArrows: Arrow[] =
+   showArrows && currentAnalysis?.from && currentAnalysis?.to
+    ? [[currentAnalysis.from, currentAnalysis.to, "#96bc4b"] as Arrow]
+    : [];
+
+
   return (
     <div className="flex items-center space-x-4">
       <EvaluationBar />
@@ -82,6 +90,7 @@ export default function ChessBoard() {
           customLightSquareStyle={{ backgroundColor: "#f6dfc0" }}
           boardOrientation={boardFlipped ? "black" : "white"}
           customSquareStyles={customSquareStyles}
+          customArrows={customArrows}
         />
         <PlayerCard
           playerName={bottomPlayer || "Anonymous"}

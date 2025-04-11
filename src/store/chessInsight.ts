@@ -20,6 +20,7 @@ interface ChessInsightState {
   currentMoveIndex: number; // current move index in the game
   report: Report | null;
   loading: boolean; // loading state for the analysis
+  showArrows: boolean; // whether to show arrows on the board or not
 }
 
 interface ChessInsightActions {
@@ -38,6 +39,7 @@ interface ChessInsightActions {
   setCurrentMoveIndex: (currentMoveIndex: number) => void;
   setReport: (report: Report | null) => void;
   setLoading: (loading: boolean) => void;
+  setShowArrows: (showArrows: boolean) => void;
 }
 
 const initialState: ChessInsightState = {
@@ -54,6 +56,7 @@ const initialState: ChessInsightState = {
   currentMoveIndex: 0,
   report: null,
   loading: false,
+  showArrows: false,
 };
 
 export const useChessInsightStore = create<
@@ -83,5 +86,6 @@ export const useChessInsightStore = create<
       set((state) => ({ currentMoveIndex })),
     setReport: (report: Report | null) => set((state) => ({ report })),
     setLoading: (loading: boolean) => set((state) => ({ loading })),
+    setShowArrows: (showArrows: boolean) => set((state) => ({ showArrows })),
   };
 });

@@ -14,6 +14,7 @@ import { useChessInsightStore } from "@/store/chessInsight";
 import { getMoveHistory, getToPosition } from "@/lib/chessUtils";
 import { Chess } from "chess.js";
 import { Slider } from "./ui/slider";
+import { Switch } from "./ui/switch"
 
 export default function NavigationPanel() {
   const {
@@ -26,7 +27,9 @@ export default function NavigationPanel() {
     setBoardFlipped,
     currentMoveIndex,
     setCurrentMoveIndex,
-    analysisArray
+    analysisArray,
+    showArrows,
+    setShowArrows,
   } = useChessInsightStore();
 
   const [position, setPosition] = useState("start");
@@ -54,8 +57,9 @@ export default function NavigationPanel() {
   const handleNav = {
     first: () => goToMove(0),
     prev: () => goToMove(Math.max(0, currentMoveIndex - 1)),
-    next: () => {goToMove(Math.min(moveHistory.length, currentMoveIndex + 1))
-      console.log(analysisArray[currentMoveIndex])
+    next: () => {
+      goToMove(Math.min(moveHistory.length, currentMoveIndex + 1));
+      console.log(analysisArray[currentMoveIndex]);
     },
     last: () => goToMove(moveHistory.length),
     save: () => {
@@ -74,12 +78,22 @@ export default function NavigationPanel() {
     setBoardFlipped(!boardFlipped);
   };
 
+  const handleShowArrow = () => {
+    setShowArrows(!showArrows);
+  }
+
   return (
     <div className="space-y-4">
       <div className="px-2">
-        <label className="block text-sm font-medium mb-1">
-          Analysis Depth: {currentDepth}
-        </label>
+        <div className="flex items-center justify-between mb-1">
+          <label className="block text-sm font-medium mb-1">
+            Analysis Depth: {currentDepth}
+          </label>
+          <div className="flex items-center space-x-1">
+            <p className="text-sm font-medium">Arrows </p>
+            <Switch id="show-arrows" checked={showArrows} onClick={handleShowArrow}  />
+          </div>
+        </div>
         <Slider
           defaultValue={[currentDepth]}
           max={18}
@@ -97,7 +111,12 @@ export default function NavigationPanel() {
         <Button variant="outline" className="w-12" onClick={handleNav.prev}>
           <ChevronLeft className="h-5 w-5" />
         </Button>
-        <Button variant="outline" className="w-12" onClick={handleNav.next} disabled={currentMoveIndex === moveHistory.length}>
+        <Button
+          variant="outline"
+          className="w-12"
+          onClick={handleNav.next}
+          disabled={currentMoveIndex === moveHistory.length}
+        >
           <ChevronRight className="h-5 w-5" />
         </Button>
         <Button variant="outline" className="w-12" onClick={handleNav.last}>

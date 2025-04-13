@@ -27,7 +27,7 @@ import GithubButton from "./GithubButton";
 export default function Navbar() {
   return (
     <header className="border-1 border-b">
-      <div className="container flex h-16 items-center px-4 sm:px-6 lg:px-8">
+      <div className="flex h-16 items-center px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl">
           <Zap className="h-6 w-6" />
           <span>ChessInsight</span>

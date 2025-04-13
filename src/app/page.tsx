@@ -16,7 +16,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-background to-muted/30 pt-12 pb-16 md:pt-24 md:pb-32">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="container px-10 mx-auto">
+        <div className="px-10 mx-auto">
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
             <div className="space-y-6">
               <div className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm">
@@ -32,18 +32,18 @@ export default function Home() {
                 premium subscription. Identify mistakes, find brilliancies, and
                 improve your game.
               </p>
-              <div className="flex flex-col gap-3 min-[400px]:flex-row">
-                <Link href="/">
-                  <Button className="w-full min-[400px]:w-auto" size="lg">
+              <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
+                <Link href="/analyze">
+                  <Button size="lg" className="w-full min-[400px]:w-auto">
                     Analyze a Game
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
-                <Link href="/">
+                <Link href="/signup">
                   <Button
-                    className="w-full min-[400px]:w-auto"
                     size="lg"
-                    variant={"outline"}
+                    variant="outline"
+                    className="w-full min-[400px]:w-auto"
                   >
                     Create Free Account
                   </Button>
@@ -99,7 +99,7 @@ export default function Home() {
 
       {/* Features Section */}
       <section className="py-16 md:py-24">
-        <div className="container px-4 md:px-6">
+        <div className="px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
             <div className="space-y-2">
               <div className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm">
@@ -183,7 +183,7 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-muted/30">
-        <div className="container px-4 md:px-6">
+        <div className="px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">

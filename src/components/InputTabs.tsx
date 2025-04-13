@@ -17,8 +17,12 @@ import { useChessInsightStore } from "@/store/chessInsight";
 import { fetchUserGames, parsePGN } from "@/lib/chessUtils";
 import { ChessGameResponse } from "@/lib/types";
 import GameSelectionModal from "./GameSelectionModal";
+import { useRouter } from "next/navigation";
+import { randomUUID } from "crypto";
 
 export default function InputTabs() {
+  const router = useRouter();
+
   const {
     inputPGN,
     setInputPGN,
@@ -77,7 +81,15 @@ export default function InputTabs() {
 
         if (!chessGame) {
           console.log("Invalid PGN format");
+          setIsAnalyzing(false);
+          return;
         }
+
+        const analysisId = generateUniqueId();
+
+        console.log("Analyzing game with ID:", analysisId);
+
+        router.push(`/analysis/${analysisId}`);
       } catch (error) {
         console.error("Error parsing PGN:", error);
       } finally {
@@ -86,11 +98,24 @@ export default function InputTabs() {
     }
   };
 
+  const generateUniqueId = () => {
+    return (
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15)
+    );
+  };
+
   const handleGameSelect = (game: ChessGameResponse) => {
     const chessGame = parsePGN(game.pgn);
     setChessGamePGN(chessGame);
     setHeaderPGN(chessGame?.header() || {});
     setShowGameModal(false);
+
+    const analysisId = generateUniqueId();
+
+    console.log("Analyzing game with ID:", analysisId);
+
+    router.push(`/analysis/${analysisId}`);
   };
 
   return (
@@ -120,13 +145,13 @@ export default function InputTabs() {
             <Textarea
               placeholder="Paste your PGN here..."
               className="min-h-[200px] resize-none focus:outline-none font-mono text-sm !bg-background !border-primary/30"
-                value={inputPGN}
-                onChange={(e) => setInputPGN(e.target.value)}
+              value={inputPGN}
+              onChange={(e) => setInputPGN(e.target.value)}
             />
             <div className="flex justify-end mt-4">
               <Button
-              onClick={handleAnalyze}
-              disabled={isAnalyzing || !inputPGN.trim()}
+                onClick={handleAnalyze}
+                disabled={isAnalyzing || !inputPGN.trim()}
               >
                 {isAnalyzing ? (
                   <>
@@ -163,7 +188,7 @@ export default function InputTabs() {
                 value={inputUsername}
                 onChange={(e) => setInputUsername(e.target.value)}
               />
-              <Button 
+              <Button
                 onClick={handleUsernameSubmit}
                 disabled={isAnalyzing || !inputUsername.trim()}
               >
@@ -199,7 +224,7 @@ export default function InputTabs() {
                 value={inputUsername}
                 onChange={(e) => setInputUsername(e.target.value)}
               />
-              <Button 
+              <Button
                 onClick={handleUsernameSubmit}
                 disabled={isAnalyzing || !inputUsername.trim()}
               >

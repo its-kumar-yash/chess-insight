@@ -87,7 +87,7 @@
   --destructive: oklch(0.4 0.2 25);
   --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.25 0 0);
-  --input: oklch(0.25 0 0);
+  --input: oklch(0.14 0.0383 260.13);
   --ring: oklch(0.6 0.2 263.8);
   --sidebar-background: oklch(0.15 0 240);
   --sidebar-foreground: oklch(0.96 0 240);

@@ -18,7 +18,7 @@ export default function GameSelectionModal({
 }: GameSelectionModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[80vh] !max-w-4xl overflow-y-auto">
+      <DialogContent className="max-h-[80vh] !max-w-4xl overflow-y-auto !border-primary/20">
         <DialogHeader>
           <DialogTitle>Select a Game</DialogTitle>
         </DialogHeader>
@@ -26,7 +26,7 @@ export default function GameSelectionModal({
           {games.slice().reverse().map((game) => (
             <div
               key={game.uuid}
-              className="p-4 border rounded-lg hover:bg-muted transition-colors"
+              className="p-4 border rounded-lg hover:bg-muted transition-colors !border-primary/20"
             >
               <div className="flex justify-between items-center">
                 <h3 className="font-semibold text-lg">

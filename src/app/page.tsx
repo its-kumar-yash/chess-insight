@@ -16,7 +16,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-background to-muted/30 pt-12 pb-16 md:pt-24 md:pb-32">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="px-10 mx-auto">
+        <div className="container px-10 mx-auto">
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
             <div className="space-y-6">
               <div className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm">
@@ -32,20 +32,23 @@ export default function Home() {
                 premium subscription. Identify mistakes, find brilliancies, and
                 improve your game.
               </p>
-              <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
-                <Link href="/analyze">
-                  <Button size="lg" className="w-full min-[400px]:w-auto">
-                    Analyze a Game
-                    <ChevronRight className="ml-2 h-4 w-4" />
+              <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4 relative z-10">
+                <Link href="/analyze" passHref legacyBehavior>
+                  <Button size="lg" className="w-full min-[400px]:w-auto" asChild>
+                    <a href="/analyze">
+                      Analyze a Game
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </a>
                   </Button>
                 </Link>
-                <Link href="/signup">
+                <Link href="/signup" passHref legacyBehavior>
                   <Button
                     size="lg"
                     variant="outline"
                     className="w-full min-[400px]:w-auto"
+                    asChild
                   >
-                    Create Free Account
+                    <a href="/signup">Create Free Account</a>
                   </Button>
                 </Link>
               </div>
@@ -65,7 +68,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mx-auto lg:mx-0 lg:flex lg:justify-center relative">
-              <div className="w-full max-w-[500px] aspect-square rounded-lg overflow-hidden border shadow-xl">
+              <div className="w-full max-w-[500px] aspect-square rounded-lg overflow-hidden border shadow-xl relative">
                 <Image
                   src="/interfaceBg.png"
                   alt="Chess analysis interface"
@@ -73,7 +76,7 @@ export default function Home() {
                   width={500}
                   height={500}
                 />
-                <div className="absolute w-[500px] inset-0 left-0 md:left-24 bg-gradient-to-t from-background/80 to-transparent"></div>
+                <div className="absolute w-full inset-0 left-0 md:left-24 bg-gradient-to-t from-background/80 to-transparent pointer-events-none"></div>
               </div>
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-background border shadow-lg rounded-lg px-6 py-3 flex items-center gap-3">
                 <div className="flex -space-x-2">
@@ -179,8 +182,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-muted/30">
         <div className="px-4 md:px-6">
@@ -195,19 +196,22 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
-              <Link href="/analyze">
-                <Button size="lg" className="w-full min-[400px]:w-auto">
-                  Analyze a Game
-                  <ChevronRight className="ml-2 h-4 w-4" />
+              <Link href="/analyze" passHref legacyBehavior>
+                <Button size="lg" className="w-full min-[400px]:w-auto" asChild>
+                  <a href="/analyze">
+                    Analyze a Game
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </a>
                 </Button>
               </Link>
-              <Link href="/signup">
+              <Link href="/signup" passHref legacyBehavior>
                 <Button
                   size="lg"
                   variant="outline"
                   className="w-full min-[400px]:w-auto"
+                  asChild
                 >
-                  Create Free Account
+                  <a href="/signup">Create Free Account</a>
                 </Button>
               </Link>
             </div>

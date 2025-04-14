@@ -18,7 +18,7 @@ export default function PlayerCard({
 }: PlayerCardProps) {
   return (
     <Card
-      className={`!py-2.5 rounded-none ${
+      className={`!py-2.5 rounded-none !border-primary/20 !bg-card/30 ${
         cardPosition === "top" ? "rounded-t-lg" : "rounded-b-lg"
       }`}
     >

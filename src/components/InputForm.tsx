@@ -53,7 +53,7 @@ export default function InputForm() {
 
     if (selectOption === "PGN") return;
 
-    console.log(`Fetching games for ${inputUsername} from ${selectOption}`);
+    // console.log(`Fetching games for ${inputUsername} from ${selectOption}`);
 
     const fetchedGames = await fetchUserGames(inputUsername, selectOption);
 
@@ -61,7 +61,7 @@ export default function InputForm() {
     // const fetchedGames = mockGames;
 
     setGameListByUsername(fetchedGames);
-    console.log("Fetched games:", fetchedGames);
+    // console.log("Fetched games:", fetchedGames);
     setShowGameModal(true);
     // setShowGames(true);
   };
@@ -77,7 +77,8 @@ export default function InputForm() {
       setHeaderPGN(chessGame?.header() || {});
 
       if (!chessGame) {
-        console.log("Invalid PGN format.");
+        // console.log("Invalid PGN format.");
+        return;
       }
     } else {
     }

@@ -49,18 +49,18 @@ export default function InputTabs() {
   const handleUsernameSubmit = async () => {
     if (!inputUsername.trim()) return;
 
-    console.log(
-      `Fetching games for ${inputUsername} from ${
-        activeTab === "chess-com" ? "Chess.com" : "Lichess"
-      }`
-    );
+    // console.log(
+    //   `Fetching games for ${inputUsername} from ${
+    //     activeTab === "chess-com" ? "Chess.com" : "Lichess"
+    //   }`
+    // );
     setIsAnalyzing(true);
 
     try {
       const platform = activeTab === "chess-com" ? "Chess.com" : "Lichess";
       const fetchedGames = await fetchUserGames(inputUsername, platform);
       setGameListByUsername(fetchedGames);
-      console.log("Fetched games:", fetchedGames);
+      // console.log("Fetched games:", fetchedGames);
       setShowGameModal(true);
     } catch (error) {
       console.error("Error fetching games:", error);
@@ -80,14 +80,14 @@ export default function InputTabs() {
         setHeaderPGN(chessGame?.header() || {});
 
         if (!chessGame) {
-          console.log("Invalid PGN format");
+          // console.log("Invalid PGN format");
           setIsAnalyzing(false);
           return;
         }
 
         const analysisId = generateUniqueId();
 
-        console.log("Analyzing game with ID:", analysisId);
+        // console.log("Analyzing game with ID:", analysisId);
 
         router.push(`/analysis/${analysisId}`);
       } catch (error) {
@@ -113,7 +113,7 @@ export default function InputTabs() {
 
     const analysisId = generateUniqueId();
 
-    console.log("Analyzing game with ID:", analysisId);
+    // console.log("Analyzing game with ID:", analysisId);
 
     router.push(`/analysis/${analysisId}`);
   };

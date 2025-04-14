@@ -59,7 +59,7 @@ export default function NavigationPanel() {
     prev: () => goToMove(Math.max(0, currentMoveIndex - 1)),
     next: () => {
       goToMove(Math.min(moveHistory.length, currentMoveIndex + 1));
-      console.log(analysisArray[currentMoveIndex]);
+      // console.log(analysisArray[currentMoveIndex]);
     },
     last: () => goToMove(moveHistory.length),
     save: () => {

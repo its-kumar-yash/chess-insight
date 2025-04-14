@@ -215,7 +215,7 @@ export default function MoveAnalysis() {
           // Find opening for this position
           const opening = openings.find(opening => result.fen?.includes(opening.fen));
           if (opening) {
-            console.log("Opening found:", opening);
+            // console.log("Opening found:", opening);
             result.opening = opening.name;
             setOpeningInfo(opening.name);
           }

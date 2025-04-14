@@ -29,7 +29,7 @@ export function parsePGN(pgn: string) {
       parsedPGN.headers = headerObject;
       // console.log("Parsed PGN Header as object:", headerObject);
     } catch (e) {
-      console.log("Error parsing PGN:", e);
+      console.error("Error parsing PGN:", e);
       return null;
     }
 
@@ -87,9 +87,9 @@ export async function fetchUserGames(username: string, platform: string) {
     // Fetch games from Lichess API
     return fetchLichessGames(username);
   } else {
-    console.log(
-      "Invalid platform. Please choose either 'Chess.com' or 'Lichess'."
-    );
+    // console.log(
+    //   "Invalid platform. Please choose either 'Chess.com' or 'Lichess'."
+    // );
     return [];
   }
 }

@@ -153,7 +153,7 @@ export function generateMoveReport(analysisArray: StockfishAnalysisResponse[]) {
       analysisArray[i].fen?.includes(opening.fen)
     );
     analysisArray[i].opening = opening?.name;
-    console.log("opening", opening?.name, analysisArray[i].fen);
+    // console.log("opening", opening?.name, analysisArray[i].fen);
 
     //determine which  player made this move
     const moveColor = i % 2 == 1 ? "white" : "black";

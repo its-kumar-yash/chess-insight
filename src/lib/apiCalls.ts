@@ -34,7 +34,7 @@ export async function fetchChessComGames(username: string) {
 
     const data = await res.json();
 
-    console.log("Chess.com games data:", data);
+    // console.log("Chess.com games data:", data);
 
     return data.games.map((game: any) => ({
       platform: "chesscom",
@@ -97,7 +97,7 @@ export async function fetchLichessGames(username: string) {
       .filter((line) => line.trim())
       .map((line) => JSON.parse(line));
 
-    console.log("Lichess games data:", games);
+    // console.log("Lichess games data:", games);
 
     return games.map((game: any) => ({
       platform: "lichess",
@@ -125,7 +125,7 @@ export async function fetchLichessGames(username: string) {
       winner: getLichessWinner(game),
     }));
   } catch (error) {
-    console.log("Error fetching Lichess games:", error);
+    console.error("Error fetching Lichess games:", error);
     return [];
   }
 }

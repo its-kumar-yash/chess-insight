@@ -9,7 +9,6 @@ import { StockfishAnalysisResponse } from "@/lib/types";
 import { analyzeMoveWithStockfish } from "@/lib/apiCalls";
 import openings from "../resource/opening.json";
 import { generateReport } from "@/lib/analysis";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Progress } from "./ui/progress";
 import { Card, CardContent } from "./ui/card";
 
@@ -87,10 +86,11 @@ export default function NewMoveAnalysis() {
     setReport,
     loading,
     setLoading,
+    openingInfo,
+    setOpeningInfo,
   } = useChessInsightStore();
 
   const [progress, setProgress] = useState(0);
-  const [openingInfo, setOpeningInfo] = useState<string>("Not Available");
 
   useEffect(() => {
     const computeAllAnalysis = async () => {
@@ -194,13 +194,13 @@ export default function NewMoveAnalysis() {
       <div>
         <h3 className="text-lg font-bold mb-2">Accuracy</h3>
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-muted p-3 rounded-lg text-center">
+          <div className="bg-muted p-3 rounded-lg text-center border-1 border-primary/20 shadow-sm">
             <p className="text-sm font-medium mb-1">White</p>
             <p className="text-2xl font-bold">
               {report.accuracies.white.toFixed(1)}%
             </p>
           </div>
-          <div className="bg-muted p-3 rounded-lg text-center">
+          <div className="bg-muted p-3 rounded-lg text-center border-1 border-primary/20 shadow-sm">
             <p className="text-sm font-medium mb-1">Black</p>
             <p className="text-2xl font-bold">
               {report.accuracies.black.toFixed(1)}%

@@ -21,6 +21,7 @@ interface ChessInsightState {
   report: Report | null;
   loading: boolean; // loading state for the analysis
   showArrows: boolean; // whether to show arrows on the board or not
+  openingInfo: string; // opening information
 }
 
 interface ChessInsightActions {
@@ -40,6 +41,7 @@ interface ChessInsightActions {
   setReport: (report: Report | null) => void;
   setLoading: (loading: boolean) => void;
   setShowArrows: (showArrows: boolean) => void;
+  setOpeningInfo: (openingInfo: string) => void;
 }
 
 const initialState: ChessInsightState = {
@@ -57,6 +59,7 @@ const initialState: ChessInsightState = {
   report: null,
   loading: false,
   showArrows: false,
+  openingInfo: "Not Found",
 };
 
 export const useChessInsightStore = create<
@@ -87,5 +90,7 @@ export const useChessInsightStore = create<
     setReport: (report: Report | null) => set((state) => ({ report })),
     setLoading: (loading: boolean) => set((state) => ({ loading })),
     setShowArrows: (showArrows: boolean) => set((state) => ({ showArrows })),
+    setOpeningInfo: (openingInfo: string) =>
+      set((state) => ({ openingInfo })),
   };
 });

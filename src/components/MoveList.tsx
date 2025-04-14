@@ -42,7 +42,7 @@ export default function MoveList() {
     if (classification === "inaccuracy") return "/inaccuracy_1024x.png";
     if (classification === "forced") return "/forced_1024x.png";
     if (classification === "brilliant") return "/brilliant_1024x.png";
-    if (classification === "great") return "/great_find_1024x.png";
+    if (classification === "great") return "/great_1024x.png";
     if (classification === "excellent") return "/excellent_1024x.png";
     if (classification === "good") return "/good_1024x.png";
     if (classification === "book") return "/book_1024x.png";

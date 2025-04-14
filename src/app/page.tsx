@@ -41,7 +41,7 @@ export default function Home() {
                     </a>
                   </Button>
                 </Link>
-                <Link href="/signup" passHref legacyBehavior>
+                {/* <Link href="/signup" passHref legacyBehavior>
                   <Button
                     size="lg"
                     variant="outline"
@@ -50,7 +50,7 @@ export default function Home() {
                   >
                     <a href="/signup">Create Free Account</a>
                   </Button>
-                </Link>
+                </Link> */}
               </div>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center">
@@ -76,7 +76,7 @@ export default function Home() {
                   width={500}
                   height={500}
                 />
-                <div className="absolute w-full inset-0 left-0 md:left-24 bg-gradient-to-t from-background/80 to-transparent pointer-events-none"></div>
+                <div className="absolute w-full inset-0 left-0 bg-gradient-to-t from-background/80 to-transparent pointer-events-none"></div>
               </div>
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-background border shadow-lg rounded-lg px-6 py-3 flex items-center gap-3">
                 <div className="flex -space-x-2">
@@ -204,7 +204,7 @@ export default function Home() {
                   </a>
                 </Button>
               </Link>
-              <Link href="/signup" passHref legacyBehavior>
+              {/* <Link href="/signup" passHref legacyBehavior>
                 <Button
                   size="lg"
                   variant="outline"
@@ -213,7 +213,7 @@ export default function Home() {
                 >
                   <a href="/signup">Create Free Account</a>
                 </Button>
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>

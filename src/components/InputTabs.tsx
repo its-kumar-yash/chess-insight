@@ -144,7 +144,7 @@ export default function InputTabs() {
           <CardContent className="!p-0">
             <Textarea
               placeholder="Paste your PGN here..."
-              className="min-h-[200px] resize-none focus:outline-none font-mono text-sm !bg-background !border-primary/30"
+              className="min-h-[200px] h-0 resize-none focus:outline-none font-mono text-sm !bg-background !border-primary/30"
               value={inputPGN}
               onChange={(e) => setInputPGN(e.target.value)}
             />

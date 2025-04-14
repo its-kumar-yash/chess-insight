@@ -33,10 +33,10 @@ export default function Navbar() {
           <span>ChessInsight</span>
         </Link>
         <div className="ml-auto flex items-center gap-4">
-          <nav className="flex gap-4 sm:gap-6">
+          {/* <nav className="flex gap-4 sm:gap-6">
             <Link href="/" className="text-sm font-medium hover:underline underline-offset-4">Login</Link>
             <Link href="/" className="text-sm font-medium hover:underline underline-offset-4">Sign Up</Link>
-          </nav>
+          </nav> */}
           <ModeToggle />
           <GithubButton />
         </div>

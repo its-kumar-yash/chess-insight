@@ -1,3 +1,4 @@
+import { getUserSession } from "@/actions/auth.action";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -10,7 +11,10 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getUserSession();
+  // console.log("Session in Navbar: ", session);
+  const user = session?.user;
   return (
     <main className="flex-1">
       {/* Hero Section */}
@@ -34,23 +38,40 @@ export default function Home() {
               </p>
               <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4 relative z-10">
                 <Link href="/analyze" passHref legacyBehavior>
-                  <Button size="lg" className="w-full min-[400px]:w-auto" asChild>
+                  <Button
+                    size="lg"
+                    className="w-full min-[400px]:w-auto"
+                    asChild
+                  >
                     <a href="/analyze">
                       Analyze a Game
                       <ChevronRight className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
                 </Link>
-                {/* <Link href="/signup" passHref legacyBehavior>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full min-[400px]:w-auto"
-                    asChild
-                  >
-                    <a href="/signup">Create Free Account</a>
-                  </Button>
-                </Link> */}
+                {!user ? (
+                  <Link href="/signup" passHref legacyBehavior>
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="w-full min-[400px]:w-auto"
+                      asChild
+                    >
+                      <a href="/signup">Create Free Account</a>
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link href="/dashboard" passHref legacyBehavior>
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="w-full min-[400px]:w-auto"
+                      asChild
+                    >
+                      <a href="/dashboard">Go to Dashboard</a>
+                    </Button>
+                  </Link>
+                )}
               </div>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center">
@@ -196,24 +217,29 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
-              <Link href="/analyze" passHref legacyBehavior>
-                <Button size="lg" className="w-full min-[400px]:w-auto" asChild>
-                  <a href="/analyze">
-                    Analyze a Game
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </a>
-                </Button>
-              </Link>
-              {/* <Link href="/signup" passHref legacyBehavior>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="w-full min-[400px]:w-auto"
-                  asChild
-                >
-                  <a href="/signup">Create Free Account</a>
-                </Button>
-              </Link> */}
+              {!user ? (
+                <Link href="/signup" passHref legacyBehavior>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full min-[400px]:w-auto"
+                    asChild
+                  >
+                    <a href="/signup">Create Free Account</a>
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/dashboard" passHref legacyBehavior>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full min-[400px]:w-auto"
+                    asChild
+                  >
+                    <a href="/dashboard">Go to Dashboard</a>
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>

@@ -129,3 +129,33 @@ export function getEvaluationLossThreshold(
   }
   return Math.max(threshold, 0);
 }
+
+export function generatePgnHash(pgn: string) {
+  // Simple hash function for strings
+  let hash = 0;
+  if (pgn.length === 0) return hash.toString();
+
+  for (let i = 0; i < pgn.length; i++) {
+    const char = pgn.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+
+  // Add a timestamp to ensure uniqueness
+  return `manual-${hash}-${Date.now()}`;
+}
+
+export function getTimeClass(timeControl : any) {
+  if (!timeControl) return "unknown";
+  
+  // Parse the time control format (e.g., "60+0", "5+3", etc.)
+  const match = timeControl.match(/^(\d+)\+(\d+)$/);
+  if (!match) return "unknown";
+  
+  const baseTime = parseInt(match[1], 10);
+  
+  if (baseTime < 3) return "bullet";
+  if (baseTime < 10) return "blitz";
+  if (baseTime < 30) return "rapid";
+  return "classical";
+}

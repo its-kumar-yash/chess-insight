@@ -7,7 +7,7 @@ interface PlayerInfo {
 export type ResultType = "white" | "black" | "draw" | "abandoned";
 
 export interface ChessGameResponse {
-  platform: "lichess" | "chesscom";
+  platform: "lichess" | "chesscom" | "manual";
   uuid: string;
   white: PlayerInfo;
   black: PlayerInfo;

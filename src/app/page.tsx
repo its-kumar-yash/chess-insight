@@ -37,13 +37,13 @@ export default async function Home() {
                 improve your game.
               </p>
               <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4 relative z-10">
-                <Link href="/analyze" passHref legacyBehavior>
+                <Link href={user ? `/analyze` : `/signup`} passHref legacyBehavior>
                   <Button
                     size="lg"
                     className="w-full min-[400px]:w-auto"
                     asChild
                   >
-                    <a href="/analyze">
+                    <a href={user ? `/analyze` : `/signup`}>
                       Analyze a Game
                       <ChevronRight className="ml-2 h-4 w-4" />
                     </a>
@@ -217,6 +217,14 @@ export default async function Home() {
               </p>
             </div>
             <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
+              <Link href={user ? `/analyze` : `/signup`} passHref legacyBehavior>
+                <Button size="lg" className="w-full min-[400px]:w-auto" asChild>
+                  <a href={user ? `/analyze` : `/signup`}>
+                    Analyze a Game
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+              </Link>
               {!user ? (
                 <Link href="/signup" passHref legacyBehavior>
                   <Button

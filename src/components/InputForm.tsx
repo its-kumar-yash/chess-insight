@@ -29,6 +29,8 @@ export default function InputForm() {
     setGameListByUsername,
     headerPGN,
     setHeaderPGN,
+    currentSelectedGame,
+    setCurrentSelectedGame,
   } = useChessInsightStore();
 
   const [selectOption, setSelectOption] = useState("PGN");

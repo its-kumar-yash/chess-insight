@@ -5,6 +5,7 @@ A free chess analysis tool that helps players improve their game by providing pr
 
 ![alt text](/public/demo.png)
 ![alt text](/public/demo2.png)
+![alt text](/public/demo3.png)
 
 ## 🚀 Features
 
@@ -13,8 +14,9 @@ A free chess analysis tool that helps players improve their game by providing pr
 - 🎯 Move categorization: Book, Brilliant, Blunder, etc.
 - 🧭 Move navigation with visual arrows
 - 🕰 Full game replay with progress control
-- 🔐 User login via Google (coming soon)
-- 💾 Save analyzed games and revisit anytime (coming soon)
+- 🔐 User login via Google
+- 💾 Save analyzed games and revisit anytime
+- 🧮 View Statistics based on the analyzed games 
 
 ## 🧪 Setup & Run Locally
 
@@ -23,6 +25,14 @@ A free chess analysis tool that helps players improve their game by providing pr
 ```bash
 git clone https://github.com/its-kumar-yash/chess-insight.git
 cd chess-insight
+```
+
+### Create .env file
+```bash
+AUTH_GOOGLE_ID=
+AUTH_GOOGLE_SECRET=
+AUTH_SECRET=
+DATABASE_URL=
 ```
 
 ### 📦 Install dependencies
@@ -45,16 +55,18 @@ npm run dev
 - ♟ react-chessboard
 - 🔍 chess-api.com (Stockfish analysis)
 - 🎨 Tailwind CSS
+- 🔒 NextAuth
+- 🗃️ Neon DB
+- ♻️ Prisma ORM
 
 ## 📈 Roadmap
 
 - [x] Game Analysis from PGN  
 - [x] Highlight Move Categories  
 - [x] Best Move Arrows  
-- [ ] Full Game Replay Timeline  
-- [ ] Add User Profiles & Dashboard  
-- [ ] Save Analyzed Games to DB  
-- [ ] Add Evaluation Graph  
+- [x] Add User Profiles & Dashboard  
+- [x] Save Analyzed Games to DB  
+- [x] Add Evaluation Graph  
 
 ## 🧑‍💻 Contributing
 

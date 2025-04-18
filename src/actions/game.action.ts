@@ -162,21 +162,20 @@ export async function saveGameAnalysis(
     // Add move reports
     if (report.moves && report.moves.length > 0) {
       // Make sure all required fields are present and properly formatted
-      const validMoves = report.moves.filter(move => 
-        move.moveIndex !== undefined && 
-        move.fen !== undefined
+      const validMoves = report.moves.filter(
+        (move) => move.moveIndex !== undefined && move.fen !== undefined
       );
-      
+
       if (validMoves.length > 0) {
         try {
           await prisma.moveReport.createMany({
             data: validMoves.map((move) => ({
               analyzedGameId: analyzedGame.id,
               moveIndex: move.moveIndex,
-              fen: move.fen || "",  // Provide default values for potentially undefined fields
+              fen: move.fen || "", // Provide default values for potentially undefined fields
               classification: move.classification || "none",
-              eval: typeof move.eval === 'number' ? move.eval : 0, // Replace null with default value 0
-              mate: typeof move.mate === 'number' ? move.mate : 0, // Replace null with default value 0
+              eval: typeof move.eval === "number" ? move.eval : 0, // Replace null with default value 0
+              mate: typeof move.mate === "number" ? move.mate : 0, // Replace null with default value 0
             })),
           });
         } catch (error) {
@@ -373,14 +372,21 @@ export async function fetchUserStats() {
       },
       take: 10,
       select: {
+        whiteBrilliant: true,
         whiteBlunder: true,
         whiteMistake: true,
         whiteInaccuracy: true,
+        blackBrilliant: true,
         blackBlunder: true,
         blackMistake: true,
         blackInaccuracy: true,
       },
     });
+
+    const totalWhiteBrilliant = recentGames.reduce(
+      (sum, game) => sum + game.whiteBrilliant,
+      0
+    );
 
     const totalWhiteBlunders = recentGames.reduce(
       (sum, game) => sum + game.whiteBlunder,
@@ -394,6 +400,12 @@ export async function fetchUserStats() {
       (sum, game) => sum + game.whiteInaccuracy,
       0
     );
+
+    const totalBlackBrilliant = recentGames.reduce(
+      (sum, game) => sum + game.blackBrilliant,
+      0
+    );
+
     const totalBlackBlunders = recentGames.reduce(
       (sum, game) => sum + game.blackBlunder,
       0
@@ -417,6 +429,7 @@ export async function fetchUserStats() {
           ((avgAccuracy._avg.whiteAccuracy || 0) +
             (avgAccuracy._avg.blackAccuracy || 0)) /
           2,
+        brilliantMoves: totalWhiteBrilliant + totalBlackBrilliant,
         recentMistakes: {
           white: {
             blunders: totalWhiteBlunders,
@@ -434,5 +447,35 @@ export async function fetchUserStats() {
   } catch (error) {
     console.error("Error fetching user stats:", error);
     return { error: "Failed to fetch user stats" };
+  }
+}
+
+// check if game is represent
+export async function checkIfGameExists(gameId: string){
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return {
+        error: "User not authenticated",
+      };
+    }
+
+    const userId =
+      session.user.id ??
+      (() => {
+        throw new Error("User ID is undefined");
+      })();
+
+    const game = await prisma.analyzedGame.findUnique({
+      where: {
+        id: gameId,
+        userId,
+      },
+    });
+
+    return !!game;
+  } catch (error) {
+    console.error("Error checking if game exists:", error);
+    return { error: "Failed to check if game exists" };
   }
 }

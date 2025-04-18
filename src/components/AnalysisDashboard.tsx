@@ -67,7 +67,6 @@ interface AnalyzedGameCardProps {
 
 export default function AnalysisDashboard() {
   const [games, setGames] = useState<any[]>([]);
-  const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -83,15 +82,7 @@ export default function AnalysisDashboard() {
       }
       setLoading(false);
     };
-    const loadStats = async () => {
-      const result = await fetchUserStats();
-      if (result.success) {
-        setStats(result.stats);
-      }
-    };
-
     loadGames();
-    loadStats();
   }, []);
 
   const loadMoreGames = async () => {
@@ -130,75 +121,6 @@ export default function AnalysisDashboard() {
 
   return (
     <div className="space-y-8">
-      {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Game Analyzed
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">{stats.totalGames}</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Average Accuracy
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <p className="text-3xl font-bold">{stats.avgAccuracy.toFixed(1)}%</p>
-                <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-                <span>White: {stats.avgWhiteAccuracy.toFixed(1)}%</span>
-                <span>Black: {stats.avgBlackAccuracy.toFixed(1)}%</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Recent Mistakes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="space-y-1">
-                  <div className="flex justify-between">
-                    <span className="text-xs">Blunders</span>
-                    <span className="text-xs font-medium">{stats.recentMistakes.white.blunders}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-xs">Mistakes</span>
-                    <span className="text-xs font-medium">{stats.recentMistakes.white.mistakes}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-xs">Inaccuracies</span>
-                    <span className="text-xs font-medium">{stats.recentMistakes.white.inaccuracies}</span>
-                  </div>
-                  <div className="text-xs text-center mt-1 text-muted-foreground">White</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="flex justify-between">
-                    <span className="text-xs">Blunders</span>
-                    <span className="text-xs font-medium">{stats.recentMistakes.black.blunders}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-xs">Mistakes</span>
-                    <span className="text-xs font-medium">{stats.recentMistakes.black.mistakes}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-xs">Inaccuracies</span>
-                    <span className="text-xs font-medium">{stats.recentMistakes.black.inaccuracies}</span>
-                  </div>
-                  <div className="text-xs text-center mt-1 text-muted-foreground">Black</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
       <div>
         <div className="flex items-center gap-2 mb-4">
           <BarChart3 className="h-5 w-5" />

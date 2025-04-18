@@ -4,8 +4,10 @@ import React from "react";
 import { PuzzleIcon as ChessPiece } from "lucide-react";
 import StatsCards from "@/components/StatsCards";
 import AnalysisDashboard from "@/components/AnalysisDashboard";
+import GameList from "@/components/GameList";
 
 export default function DashboardPage() {
+  
   return (
     <main className="flex-1 container pt-3 sm:px-6 lg:px-8">
       {/* Dashboard Header */}
@@ -28,8 +30,10 @@ export default function DashboardPage() {
 
       {/* Stats Cards */}
       <StatsCards />
-      <AnalysisDashboard />
+      {/* <AnalysisDashboard /> */}
 
+      {/* Game List */}
+      <GameList/>
     </main>
   );
 }

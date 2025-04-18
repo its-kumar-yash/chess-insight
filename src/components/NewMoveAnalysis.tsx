@@ -18,7 +18,7 @@ import { generateReport } from "@/lib/analysis";
 import { Progress } from "./ui/progress";
 import { Card, CardContent } from "./ui/card";
 import toast from "react-hot-toast";
-import { saveGameAnalysis } from "@/actions/game.action";
+import { checkIfGameExists, saveGameAnalysis } from "@/actions/game.action";
 import { Button } from "./ui/button";
 import { useParams } from "next/navigation";
 
@@ -108,6 +108,31 @@ export default function NewMoveAnalysis() {
   const [progress, setProgress] = useState(0);
   const [savingAnalysis, setSavingAnalysis] = useState(false);
   const [analysisId, setAnalysisId] = useState<string | null>(null);
+  const [gameExists, setGameExists] = useState(false);
+  const [checkingGame, setCheckingGame] = useState(false);
+
+  useEffect(() => {
+    const checkGameInDb = async () => {
+      if (gameId) {
+        setCheckingGame(true);
+        try {
+          const exists = await checkIfGameExists(gameId);
+          if (exists && typeof exists !== 'object') {
+            setGameExists(true);
+            setAnalysisId(gameId);
+          } else {
+            setGameExists(false);
+          }
+        } catch (error) {
+          console.error("Error checking game existence:", error);
+          setGameExists(false);
+        } finally {
+          setCheckingGame(false);
+        }
+      }
+    };
+    checkGameInDb();
+  }, [gameId]);
 
   useEffect(() => {
     const computeAllAnalysis = async () => {
@@ -248,6 +273,21 @@ export default function NewMoveAnalysis() {
     );
   }
 
+  // Render loading state for checking game existence
+  if (checkingGame) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full p-4">
+        <Card className="w-full p-6">
+          <CardContent className="space-y-4">
+            <h3 className="text-lg font-bold">Checking Game Status</h3>
+            <p>Please wait while we check the game status...</p>
+            <Progress className="w-full" value={50} max={100} />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   // Render loading state or content
   if (loading) {
     return (
@@ -280,7 +320,7 @@ export default function NewMoveAnalysis() {
 
   return (
     <div className="flex flex-col gap-4">
-      {(currentSelectedGame || inputPGN) && !analysisId && (
+      {!gameExists && !analysisId && (currentSelectedGame || inputPGN) && (
         <div className="">
           <Button
             onClick={handleSaveAnalysis}

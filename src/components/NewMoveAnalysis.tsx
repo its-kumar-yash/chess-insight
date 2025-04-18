@@ -4,13 +4,23 @@ import React, { useEffect, useState } from "react";
 import { Separator } from "./ui/separator";
 import Image from "next/image";
 import { useChessInsightStore } from "@/store/chessInsight";
-import { getMoveHistory, getToPosition } from "@/lib/chessUtils";
-import { StockfishAnalysisResponse } from "@/lib/types";
+import {
+  generatePgnHash,
+  getMoveHistory,
+  getTimeClass,
+  getToPosition,
+  parsePGN,
+} from "@/lib/chessUtils";
+import { ChessGameResponse, StockfishAnalysisResponse } from "@/lib/types";
 import { analyzeMoveWithStockfish } from "@/lib/apiCalls";
 import openings from "../resource/opening.json";
 import { generateReport } from "@/lib/analysis";
 import { Progress } from "./ui/progress";
 import { Card, CardContent } from "./ui/card";
+import toast from "react-hot-toast";
+import { checkIfGameExists, saveGameAnalysis } from "@/actions/game.action";
+import { Button } from "./ui/button";
+import { useParams } from "next/navigation";
 
 const classificationColors = {
   brilliant: "#1cada6",
@@ -60,9 +70,7 @@ const MoveClassificationItem = ({
         <span className="font-bold w-8 text-center" style={{ color }}>
           {whiteCount}
         </span>
-        <div
-          className="w-8 h-8 rounded-full flex items-center justify-center mx-4"
-        >
+        <div className="w-8 h-8 rounded-full flex items-center justify-center mx-4">
           <span className="">{renderIcon()}</span>
         </div>
         <span className="font-bold w-8 text-center" style={{ color }}>
@@ -74,8 +82,14 @@ const MoveClassificationItem = ({
 };
 
 export default function NewMoveAnalysis() {
+  const params = useParams();
+  const gameId = params.id as string;
+
   const {
+    inputPGN,
+    headerPGN,
     chessGamePGN,
+    setChessGamePGN,
     currentAnalysis,
     setCurrentAnalysis,
     analysisArray,
@@ -88,9 +102,37 @@ export default function NewMoveAnalysis() {
     setLoading,
     openingInfo,
     setOpeningInfo,
+    currentSelectedGame,
   } = useChessInsightStore();
 
   const [progress, setProgress] = useState(0);
+  const [savingAnalysis, setSavingAnalysis] = useState(false);
+  const [analysisId, setAnalysisId] = useState<string | null>(null);
+  const [gameExists, setGameExists] = useState(false);
+  const [checkingGame, setCheckingGame] = useState(false);
+
+  useEffect(() => {
+    const checkGameInDb = async () => {
+      if (gameId) {
+        setCheckingGame(true);
+        try {
+          const exists = await checkIfGameExists(gameId);
+          if (exists && typeof exists !== 'object') {
+            setGameExists(true);
+            setAnalysisId(gameId);
+          } else {
+            setGameExists(false);
+          }
+        } catch (error) {
+          console.error("Error checking game existence:", error);
+          setGameExists(false);
+        } finally {
+          setCheckingGame(false);
+        }
+      }
+    };
+    checkGameInDb();
+  }, [gameId]);
 
   useEffect(() => {
     const computeAllAnalysis = async () => {
@@ -159,6 +201,93 @@ export default function NewMoveAnalysis() {
     }
   }, [currentMoveIndex, analysisArray]);
 
+  // function to save analysis to database
+  const handleSaveAnalysis = async () => {
+    if (!chessGamePGN || !report) {
+      toast.error("Missing data to save analysis.");
+      return;
+    }
+
+    console.log({ chessGamePGN, report, currentSelectedGame });
+
+    try {
+      setSavingAnalysis(true);
+
+      let gameToSave = currentSelectedGame;
+
+      if (!currentSelectedGame && inputPGN) {
+        gameToSave = {
+          platform: "manual",
+          uuid: `manual-${generateUniqueId()}`,
+          pgn: inputPGN,
+          timeClass: headerPGN.TimeControl
+            ? getTimeClass(headerPGN.TimeControl)
+            : "unknown",
+          timeControl: headerPGN.TimeControl || undefined,
+          eco: headerPGN.ECO || undefined,
+          date: headerPGN.Date || undefined,
+          result: headerPGN.Result || undefined,
+          winner:
+            headerPGN.Result === "1/2-1/2"
+              ? "draw"
+              : headerPGN.Result === "1-0"
+              ? "white"
+              : "black",
+          white: {
+            username: headerPGN.White || "White",
+            rating: headerPGN.WhiteElo ? parseInt(headerPGN.WhiteElo, 10) : 0,
+          },
+          black: {
+            username: headerPGN.Black || "Black",
+            rating: headerPGN.BlackElo ? parseInt(headerPGN.BlackElo, 10) : 0,
+          },
+        };
+      }
+
+      const result = await saveGameAnalysis(
+        gameToSave as ChessGameResponse,
+        report,
+        analysisArray
+      );
+
+      console.log(result);
+
+      if (result.error) {
+        toast.error("Error saving analysis. Please try again.");
+      } else {
+        toast.success("Analysis saved successfully!");
+        setAnalysisId(result.gameId ?? null);
+      }
+    } catch (error) {
+      console.error("Error saving analysis:", error);
+      toast.error("Error saving analysis. Please try again.");
+    } finally {
+      setSavingAnalysis(false);
+    }
+  };
+
+  function generateUniqueId() {
+    return (
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15)
+    );
+  }
+
+  // Render loading state for checking game existence
+  if (checkingGame) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full p-4">
+        <Card className="w-full p-6">
+          <CardContent className="space-y-4">
+            <h3 className="text-lg font-bold">Checking Game Status</h3>
+            <p>Please wait while we check the game status...</p>
+            <Progress className="w-full" value={50} max={100} />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   // Render loading state or content
   if (loading) {
     return (
@@ -191,6 +320,20 @@ export default function NewMoveAnalysis() {
 
   return (
     <div className="flex flex-col gap-4">
+      {!gameExists && !analysisId && (currentSelectedGame || inputPGN) && (
+        <div className="">
+          <Button
+            onClick={handleSaveAnalysis}
+            disabled={savingAnalysis}
+            className="w-full"
+          >
+            {savingAnalysis
+              ? "Saving Analysis..."
+              : "Save Analysis to Your Dashboard"}
+          </Button>
+        </div>
+      )}
+
       <div>
         <h3 className="text-lg font-bold mb-2">Accuracy</h3>
         <div className="grid grid-cols-2 gap-4">

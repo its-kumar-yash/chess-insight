@@ -67,10 +67,9 @@ export default function ChessBoard() {
   };
 
   const customArrows: Arrow[] =
-   showArrows && currentAnalysis?.from && currentAnalysis?.to
-    ? [[currentAnalysis.from, currentAnalysis.to, "#96bc4b"] as Arrow]
-    : [];
-
+    showArrows && currentAnalysis?.from && currentAnalysis?.to
+      ? [[currentAnalysis.from, currentAnalysis.to, "#96bc4b"] as Arrow]
+      : [];
 
   return (
     <div className="flex items-center space-x-4">

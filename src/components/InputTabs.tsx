@@ -34,6 +34,7 @@ export default function InputTabs() {
     setGameListByUsername,
     headerPGN,
     setHeaderPGN,
+    setCurrentSelectedGame
   } = useChessInsightStore();
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -78,7 +79,6 @@ export default function InputTabs() {
         const chessGame = parsePGN(inputPGN);
         setChessGamePGN(chessGame);
         setHeaderPGN(chessGame?.header() || {});
-
         if (!chessGame) {
           // console.log("Invalid PGN format");
           setIsAnalyzing(false);
@@ -110,7 +110,7 @@ export default function InputTabs() {
     setChessGamePGN(chessGame);
     setHeaderPGN(chessGame?.header() || {});
     setShowGameModal(false);
-
+    setCurrentSelectedGame(game);
     const analysisId = generateUniqueId();
 
     // console.log("Analyzing game with ID:", analysisId);
